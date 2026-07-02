@@ -62,23 +62,27 @@ npm start
 
 | Nombre del parámetro            | Tipo          | Descripción                                        |
 | :------------------------------ | :------------ | :------------------------------------------------- |
-| tasks\*                         | [Task](#Task) | Tasks array.                                       |
-| [EventOption](#EventOption)     | interface     | Specifies gantt events.                            |
-| [DisplayOption](#DisplayOption) | interface     | Specifies view type and display timeline language. |
-| [StylingOption](#StylingOption) | interface     | Specifies chart and global tasks styles            |
+| tasks\*                         | [Task](#Task) | Matriz de tareas.                                  |
+| [EventOption](#EventOption)     | interface     | Especifica los eventos de Gantt.                   |
+| [DisplayOption](#DisplayOption) | interface     | Especifica el tipo de vista y el idioma de la      |
+|                                 |               | línea de tiempo que se muestra.                    |
+| [StylingOption](#StylingOption) | interface     | Especifica los estilos de gráficos y tareas        |
+|                                 |               | globales.                                          |
 
 ### EventOption
 
-| Nombre del parámetro | Tipo                                                                          | Descripción                                                                             |
-| :------------------- | :---------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
-| onSelect           | (task: Task, isSelected: boolean) => void                                     | Specifies the function to be executed on the taskbar select or unselect event.          |
-| onDoubleClick      | (task: Task) => void                                                          | Specifies the function to be executed on the taskbar onDoubleClick event.               |
-| onClick            | (task: Task) => void                                                          | Specifies the function to be executed on the taskbar onClick event.                     |
-| onDelete\*         | (task: Task) => void/boolean/Promise<void>/Promise<boolean>                   | Specifies the function to be executed on the taskbar on Delete button press event.      |
-| onDateChange\*     | (task: Task, children: Task[]) => void/boolean/Promise<void>/Promise<boolean> | Specifies the function to be executed when drag taskbar event on timeline has finished. |
-| onProgressChange\* | (task: Task, children: Task[]) => void/boolean/Promise<void>/Promise<boolean> | Specifies the function to be executed when drag taskbar progress event has finished.    |
-| onExpanderClick\*  | onExpanderClick: (task: Task) => void;                                        | Specifies the function to be executed on the table expander click                       |
-| timeStep           | number                                                                        | A time step value for onDateChange. Specify in milliseconds.                            |
+| Nombre del parámetro | Tipo                           | Descripción                                                |
+| :------------------- | :----------------------------- | :--------------------------------------------------------- |
+| onSelect             | (task: Task, isSelected:       | Especifica la función que se ejecutará al seleccionar o    |
+|                      | boolean) => void               | deseleccionar un elemento de la barra de tareas.           |
+| onDoubleClick        | (task: Task) => void           | Especifica la función que se ejecutará en el evento        |
+|                      |                                | onDoubleClick de la barra de tareas.                       |
+| onClick              | (task: Task) => void                                                          | Specifies the function to be executed on the taskbar onClick event.                     |
+| onDelete\*           | (task: Task) => void/boolean/Promise<void>/Promise<boolean>                   | Specifies the function to be executed on the taskbar on Delete button press event.      |
+| onDateChange\*       | (task: Task, children: Task[]) => void/boolean/Promise<void>/Promise<boolean> | Specifies the function to be executed when drag taskbar event on timeline has finished. |
+| onProgressChange\*   | (task: Task, children: Task[]) => void/boolean/Promise<void>/Promise<boolean> | Specifies the function to be executed when drag taskbar progress event has finished.    |
+| onExpanderClick\*    | onExpanderClick: (task: Task) => void;                                        | Specifies the function to be executed on the table expander click                       |
+| timeStep             | number                                                                        | A time step value for onDateChange. Specify in milliseconds.                            |
 
 \* El gráfico deshace la operación si el método devuelve falso o error. El parámetro children devuelve registros de un nivel de profundidad.
 

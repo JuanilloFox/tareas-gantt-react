@@ -1,8 +1,8 @@
 {
   "name": "tareas-gantt-react",
   "version": "0.3.9",
-  "description": "Interactive Gantt Chart for React with TypeScript.",
-  "author": "JuanilloFox <juanillofox@gmail.com>",
+  "description": "Diagrama de Gantt interactivo para React con TypeScript.",
+  "author": "JuanilloFox <juanillofox@hotmail.com>",
   "homepage": "https://github.com/JuanilloFox/tareas-gantt-react",
   "license": "MIT",
   "repository": "JuanilloFox/tareas-gantt-react",
