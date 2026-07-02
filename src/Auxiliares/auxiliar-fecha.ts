@@ -1,6 +1,4 @@
 import { Task, ViewMode } from "../types/public-types";
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-import DateTimeFormat = Intl.DateTimeFormat;
 
 type DateHelperScales =
   | "year"
@@ -11,12 +9,16 @@ type DateHelperScales =
   | "second"
   | "millisecond";
 
-const intlDTCache = {};
+// Solución al noImplicitAny: Tipado explícito de la caché
+const intlDTCache: Record<string, Intl.DateTimeFormat> = {};
+
 export const getCachedDateTimeFormat = (
   locString: string | string[],
-  opts: DateTimeFormatOptions = {}
-): DateTimeFormat => {
-  const key = JSON.stringify([locString, opts]);
+  opts: Intl.DateTimeFormatOptions = {}
+): Intl.DateTimeFormat => {
+  // Generación de una clave de string plana y rápida en lugar de usar JSON.stringify
+  const key = `${Array.isArray(locString) ? locString.join(",") : locString}-${opts.weekday || ""}-${opts.month || ""}`;
+
   let dtf = intlDTCache[key];
   if (!dtf) {
     dtf = new Intl.DateTimeFormat(locString, opts);
@@ -29,8 +31,9 @@ export const addToDate = (
   date: Date,
   quantity: number,
   scale: DateHelperScales
-) => {
-  const newDate = new Date(
+): Date => {
+  // Retorna una nueva instancia limpia sin mutar el objeto 'date' original
+  return new Date(
     date.getFullYear() + (scale === "year" ? quantity : 0),
     date.getMonth() + (scale === "month" ? quantity : 0),
     date.getDate() + (scale === "day" ? quantity : 0),
@@ -39,11 +42,10 @@ export const addToDate = (
     date.getSeconds() + (scale === "second" ? quantity : 0),
     date.getMilliseconds() + (scale === "millisecond" ? quantity : 0)
   );
-  return newDate;
 };
 
-export const startOfDate = (date: Date, scale: DateHelperScales) => {
-  const scores = [
+export const startOfDate = (date: Date, scale: DateHelperScales): Date => {
+  const scores: DateHelperScales[] = [
     "millisecond",
     "second",
     "minute",
@@ -53,11 +55,10 @@ export const startOfDate = (date: Date, scale: DateHelperScales) => {
     "year",
   ];
 
-  const shouldReset = (_scale: DateHelperScales) => {
-    const maxScore = scores.indexOf(scale);
-    return scores.indexOf(_scale) <= maxScore;
-  };
-  const newDate = new Date(
+  const maxScore = scores.indexOf(scale);
+  const shouldReset = (_scale: DateHelperScales) => scores.indexOf(_scale) <= maxScore;
+
+  return new Date(
     date.getFullYear(),
     shouldReset("year") ? 0 : date.getMonth(),
     shouldReset("month") ? 1 : date.getDate(),
@@ -66,76 +67,60 @@ export const startOfDate = (date: Date, scale: DateHelperScales) => {
     shouldReset("minute") ? 0 : date.getSeconds(),
     shouldReset("second") ? 0 : date.getMilliseconds()
   );
-  return newDate;
 };
 
 export const ganttDateRange = (
   tasks: Task[],
   viewMode: ViewMode,
   preStepsCount: number
-) => {
-  let newStartDate: Date = tasks[0].start;
-  let newEndDate: Date = tasks[0].start;
+): [Date, Date] => {
+  if (!tasks.length) return [new Date(), new Date()];
+
+  let newStartDate: Date = new Date(tasks[0].start.getTime());
+  let newEndDate: Date = new Date(tasks[0].end.getTime());
+
   for (const task of tasks) {
     if (task.start < newStartDate) {
-      newStartDate = task.start;
+      newStartDate = new Date(task.start.getTime());
     }
     if (task.end > newEndDate) {
-      newEndDate = task.end;
+      newEndDate = new Date(task.end.getTime());
     }
   }
+
   switch (viewMode) {
     case ViewMode.Year:
-      newStartDate = addToDate(newStartDate, -1, "year");
-      newStartDate = startOfDate(newStartDate, "year");
-      newEndDate = addToDate(newEndDate, 1, "year");
-      newEndDate = startOfDate(newEndDate, "year");
+      newStartDate = startOfDate(addToDate(newStartDate, -1, "year"), "year");
+      newEndDate = startOfDate(addToDate(newEndDate, 1, "year"), "year");
       break;
     case ViewMode.QuarterYear:
-      newStartDate = addToDate(newStartDate, -3, "month");
-      newStartDate = startOfDate(newStartDate, "month");
-      newEndDate = addToDate(newEndDate, 3, "year");
-      newEndDate = startOfDate(newEndDate, "year");
+      newStartDate = startOfDate(addToDate(newStartDate, -3, "month"), "month");
+      newEndDate = startOfDate(addToDate(newEndDate, 3, "year"), "year");
       break;
     case ViewMode.Month:
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, "month");
-      newStartDate = startOfDate(newStartDate, "month");
-      newEndDate = addToDate(newEndDate, 1, "year");
-      newEndDate = startOfDate(newEndDate, "year");
+      newStartDate = startOfDate(addToDate(newStartDate, -1 * preStepsCount, "month"), "month");
+      newEndDate = startOfDate(addToDate(newEndDate, 1, "year"), "year");
       break;
     case ViewMode.Week:
       newStartDate = startOfDate(newStartDate, "day");
-      newStartDate = addToDate(
-        getMonday(newStartDate),
-        -7 * preStepsCount,
-        "day"
-      );
-      newEndDate = startOfDate(newEndDate, "day");
-      newEndDate = addToDate(newEndDate, 1.5, "month");
+      newStartDate = addToDate(getMonday(newStartDate), -7 * preStepsCount, "day");
+      newEndDate = addToDate(startOfDate(newEndDate, "day"), 1.5, "month");
       break;
     case ViewMode.Day:
-      newStartDate = startOfDate(newStartDate, "day");
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, "day");
-      newEndDate = startOfDate(newEndDate, "day");
-      newEndDate = addToDate(newEndDate, 19, "day");
+      newStartDate = addToDate(startOfDate(newStartDate, "day"), -1 * preStepsCount, "day");
+      newEndDate = addToDate(startOfDate(newEndDate, "day"), 19, "day");
       break;
     case ViewMode.QuarterDay:
-      newStartDate = startOfDate(newStartDate, "day");
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, "day");
-      newEndDate = startOfDate(newEndDate, "day");
-      newEndDate = addToDate(newEndDate, 66, "hour"); // 24(1 day)*3 - 6
+      newStartDate = addToDate(startOfDate(newStartDate, "day"), -1 * preStepsCount, "day");
+      newEndDate = addToDate(startOfDate(newEndDate, "day"), 66, "hour");
       break;
     case ViewMode.HalfDay:
-      newStartDate = startOfDate(newStartDate, "day");
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, "day");
-      newEndDate = startOfDate(newEndDate, "day");
-      newEndDate = addToDate(newEndDate, 108, "hour"); // 24(1 day)*5 - 12
+      newStartDate = addToDate(startOfDate(newStartDate, "day"), -1 * preStepsCount, "day");
+      newEndDate = addToDate(startOfDate(newEndDate, "day"), 108, "hour");
       break;
     case ViewMode.Hour:
-      newStartDate = startOfDate(newStartDate, "hour");
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, "hour");
-      newEndDate = startOfDate(newEndDate, "day");
-      newEndDate = addToDate(newEndDate, 1, "day");
+      newStartDate = addToDate(startOfDate(newStartDate, "hour"), -1 * preStepsCount, "hour");
+      newEndDate = addToDate(startOfDate(newEndDate, "day"), 1, "day");
       break;
   }
   return [newStartDate, newEndDate];
@@ -145,9 +130,10 @@ export const seedDates = (
   startDate: Date,
   endDate: Date,
   viewMode: ViewMode
-) => {
-  let currentDate: Date = new Date(startDate);
-  const dates: Date[] = [currentDate];
+): Date[] => {
+  let currentDate: Date = new Date(startDate.getTime());
+  const dates: Date[] = [new Date(currentDate.getTime())];
+
   while (currentDate < endDate) {
     switch (viewMode) {
       case ViewMode.Year:
@@ -175,48 +161,44 @@ export const seedDates = (
         currentDate = addToDate(currentDate, 1, "hour");
         break;
     }
-    dates.push(currentDate);
+    // Clonamos explícitamente para no llenar el array con referencias al mismo objeto mutable
+    dates.push(new Date(currentDate.getTime()));
   }
   return dates;
 };
 
-export const getLocaleMonth = (date: Date, locale: string) => {
-  let bottomValue = getCachedDateTimeFormat(locale, {
-    month: "long",
-  }).format(date);
-  bottomValue = bottomValue.replace(
-    bottomValue[0],
-    bottomValue[0].toLocaleUpperCase()
-  );
-  return bottomValue;
+// Función auxiliar privada para capitalizar de forma segura y robusta strings de cualquier idioma
+const capitalize = (str: string): string => {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const getLocaleMonth = (date: Date, locale: string): string => {
+  const formatted = getCachedDateTimeFormat(locale, { month: "long" }).format(date);
+  return capitalize(formatted);
 };
 
 export const getLocalDayOfWeek = (
   date: Date,
   locale: string,
-  format?: "long" | "short" | "narrow" | undefined
-) => {
-  let bottomValue = getCachedDateTimeFormat(locale, {
-    weekday: format,
-  }).format(date);
-  bottomValue = bottomValue.replace(
-    bottomValue[0],
-    bottomValue[0].toLocaleUpperCase()
-  );
-  return bottomValue;
+  format?: "long" | "short" | "narrow"
+): string => {
+  const formatted = getCachedDateTimeFormat(locale, { weekday: format }).format(date);
+  return capitalize(formatted);
 };
 
 /**
- * Returns monday of current week
- * @param date date for modify
+ * Returns monday of current week (Sin mutación colateral)
  */
-const getMonday = (date: Date) => {
-  const day = date.getDay();
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-  return new Date(date.setDate(diff));
+const getMonday = (date: Date): Date => {
+  const resultDate = new Date(date.getTime());
+  const day = resultDate.getDay();
+  const diff = resultDate.getDate() - day + (day === 0 ? -6 : 1);
+  resultDate.setDate(diff);
+  return resultDate;
 };
 
-export const getWeekNumberISO8601 = (date: Date) => {
+export const getWeekNumberISO8601 = (date: Date): string => {
   const tmpDate = new Date(date.valueOf());
   const dayNumber = (tmpDate.getDay() + 6) % 7;
   tmpDate.setDate(tmpDate.getDate() - dayNumber + 3);
@@ -229,13 +211,9 @@ export const getWeekNumberISO8601 = (date: Date) => {
     1 + Math.ceil((firstThursday - tmpDate.valueOf()) / 604800000)
   ).toString();
 
-  if (weekNumber.length === 1) {
-    return `0${weekNumber}`;
-  } else {
-    return weekNumber;
-  }
+  return weekNumber.padStart(2, "0"); // Código moderno en lugar de if/else manual
 };
 
-export const getDaysInMonth = (month: number, year: number) => {
+export const getDaysInMonth = (month: number, year: number): number => {
   return new Date(year, month + 1, 0).getDate();
 };
