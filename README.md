@@ -4,7 +4,7 @@
 
 ![ejemplo](https://user-images.githubusercontent.com/26743903/88215863-f35d5f00-cc64-11ea-81db-e829e6e9b5c8.png)
 
-## [Demostración en vivo](https://juanillofox.github.io/gantt-task-react/)
+## [Demostración en vivo](https://github.com/JuanilloFox/tareas-gantt-react)
 
 ## Instalar
 
@@ -51,7 +51,7 @@ Puedes manejar acciones
 ## Cómo ejecutar un ejemplo
 
 ```
-cd ./example
+cd ./ejemplo
 npm install
 npm start
 ```
@@ -94,15 +94,18 @@ npm start
 
 ### StylingOption
 
-| Nombre del parámetro      | Tipo   | Descripción                                                                                    |
-| :------------------------- | :----- | :--------------------------------------------------------------------------------------------- |
-| headerHeight               | number | Specifies the header height.                                                                   |
-| ganttHeight                | number | Specifies the gantt chart height without header. Default is 0. It`s mean no height limitation. |
-| columnWidth                | number | Specifies the time period width.                                                               |
-| listCellWidth              | string | Specifies the task list cell width. Empty string is mean "no display".                         |
-| rowHeight                  | number | Specifies the task row height.                                                                 |
-| barCornerRadius            | number | Specifies the taskbar corner rounding.                                                         |
-| barFill                    | number | Specifies the taskbar occupation. Sets in percent from 0 to 100.                               |
+| Nombre del parámetro       | Tipo   | Descripción                                                                 |
+| :------------------------- | :----- | :-------------------------------------------------------------------------- |
+| headerHeight               | number | Especifica la altura del encabezado.                                        |
+| ganttHeight                | number | Especifica la altura del diagrama de Gantt sin encabezado. El valor         |
+|                            |        | predeterminado es 0. Esto significa que no hay limitación de altura.        |
+| columnWidth                | number | Especifica la duración del período de tiempo.                               |
+| listCellWidth              | string | Especifica el ancho de la celda de la lista de tareas. Una cadena vacía     |
+|                            |        | significa "no mostrar".                                                     |
+| rowHeight                  | number | Especifica la altura de la fila de tareas.                                  |
+| barCornerRadius            | number | Especifica el redondeo de las esquinas de la barra de tareas.               |
+| barFill                    | number | Especifica la ocupación de la barra de tareas. Se establece en porcentaje   |
+|                            |        | de 0 a 100.                                                                 |
 | handleWidth                | number | Specifies width the taskbar drag event control for start and end dates.                        |
 | fontFamily                 | string | Specifies the application font.                                                                |
 | fontSize                   | string | Specifies the application font size.                                                           |
@@ -117,30 +120,36 @@ npm start
 | TaskListHeader             |        | Specifies the task list Header view                                                            |
 | TaskListTable              |        | Specifies the task list Table view                                                             |
 
-- TooltipContent: [`React.FC<{ task: Task; fontSize: string; fontFamily: string; }>;`](https://github.com/MaTeMaTuK/gantt-task-react/blob/main/src/components/other/tooltip.tsx#L56)
+- TooltipContent: [`React.FC<{ task: Task; fontSize: string; fontFamily: string; }>;`](https://github.com/JuanilloFox/tareas-gantt-react/blob/main/src/components/other/tooltip.tsx#L56)
 - TaskListHeader: `React.FC<{ headerHeight: number; rowWidth: string; fontFamily: string; fontSize: string;}>;`
 - TaskListTable: `React.FC<{ rowHeight: number; rowWidth: string; fontFamily: string; fontSize: string; locale: string; tasks: Task[]; selectedTaskId: string; setSelectedTask: (taskId: string) => void; }>;`
 
 ### Task
 
-| Parameter Name | Type     | Descripción                                                                                           |
-| :------------- | :------- | :---------------------------------------------------------------------------------------------------- |
-| id\*           | string   | Task id.                                                                                              |
-| name\*         | string   | Task display name.                                                                                    |
-| type\*         | string   | Task display type: **task**, **milestone**, **project**                                               |
-| start\*        | Date     | Task start date.                                                                                      |
-| end\*          | Date     | Task end date.                                                                                        |
-| progress\*     | number   | Task progress. Sets in percent from 0 to 100.                                                         |
-| dependencies   | string[] | Specifies the parent dependencies ids.                                                                |
-| styles         | object   | Specifies the taskbar styling settings locally. Object is passed with the following attributes:       |
-|                |          | - **backgroundColor**: String. Specifies the taskbar background fill color locally.                   |
-|                |          | - **backgroundSelectedColor**: String. Specifies the taskbar background fill color locally on select. |
-|                |          | - **progressColor**: String. Specifies the taskbar progress fill color locally.                       |
-|                |          | - **progressSelectedColor**: String. Specifies the taskbar progress fill color globally on select.    |
-| isDisabled     | bool     | Disables all action for current task.                                                                 |
-| fontSize       | string   | Specifies the taskbar font size locally.                                                              |
-| project        | string   | Task project name                                                                                     |
-| hideChildren   | bool     | Hide children items. Parameter works with project type only                                           |
+| Nombre del                                                                                                         |
+| parámetro      | Tipo     | Descripción                                                                            |
+| :------------- | :------- | :------------------------------------------------------------------------------------- |
+| id\*           | string   | ID de tarea.                                                                           |
+| name\*         | string   | Nombre visual de la tarea.                                                             |
+| type\*         | string   | Tipo de visualización de tareas: **task**, **milestone**, **project**                  |
+| start\*        | Date     | Fecha de inicio de la tarea.                                                           |
+| end\*          | Date     | Fin de la tarea date.                                                                  |
+| progress\*     | number   | Progreso de la tarea. Se muestra en porcentaje de 0 a 100.                             |
+| dependencies   | string[] | Especifica los identificadores de las dependencias principales.                        |
+| styles         | object   | Especifica localmente la configuración de estilo de la barra de tareas. El objeto      |
+|                |          | se pasa con los siguientes atributos:                                                  |
+|                |          | - **backgroundColor**: Cadena. Especifica localmente el color de relleno del fondo de  |
+|                |          |   la barra de tareas.                                                                  |
+|                |          | - **backgroundSelectedColor**: Cadena. Especifica localmente el color de relleno del   |
+|                |          |   fondo de la barra de tareas al seleccionarla.                                        |
+|                |          | - **progressColor**: Cadena. Especifica localmente el color de relleno de la barra de  |
+|                |          |   progreso.                                                                            |
+|                |          | - **progressSelectedColor**: Cadena. Especifica el color de relleno de la barra de     |
+|                |          |   progreso de forma global al seleccionarla.                                           |
+| isDisabled     | bool     | Deshabilita todas las acciones para la tarea actual.                                   |
+| fontSize       | string   | Especifica el tamaño de fuente de la barra de tareas localmente.                       |
+| project        | string   |Nombre del proyecto de tarea                                                            |
+| hideChildren   | bool     | Ocultar elementos secundarios. El parámetro funciona solo con el tipo de proyecto.     |
 
 \*Requerido
 
