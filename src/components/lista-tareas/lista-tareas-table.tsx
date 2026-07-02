@@ -2,18 +2,6 @@ import React, { useMemo } from "react";
 import styles from "./lista-tareas-table.module.css";
 import { Task } from "../../types/public-types";
 
-const localeDateStringCache = {};
-const toLocaleDateStringFactory =
-  (locale: string) =>
-  (date: Date, dateTimeOptions: Intl.DateTimeFormatOptions) => {
-    const key = date.toString();
-    let lds = localeDateStringCache[key];
-    if (!lds) {
-      lds = date.toLocaleDateString(locale, dateTimeOptions);
-      localeDateStringCache[key] = lds;
-    }
-    return lds;
-  };
 const dateTimeOptions: Intl.DateTimeFormatOptions = {
   weekday: "short",
   year: "numeric",
@@ -21,7 +9,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-export const TaskListTableDefault: React.FC<{
+interface TaskListTableProps {
   rowHeight: number;
   rowWidth: string;
   fontFamily: string;
@@ -31,19 +19,23 @@ export const TaskListTableDefault: React.FC<{
   selectedTaskId: string;
   setSelectedTask: (taskId: string) => void;
   onExpanderClick: (task: Task) => void;
-}> = ({
+}
+
+export const TaskListTableDefault: React.FC<TaskListTableProps> = ({
   rowHeight,
   rowWidth,
   tasks,
   fontFamily,
   fontSize,
   locale,
+  selectedTaskId,
+  setSelectedTask,
   onExpanderClick,
 }) => {
-  const toLocaleDateString = useMemo(
-    () => toLocaleDateStringFactory(locale),
-    [locale]
-  );
+  // Intl.DateTimeFormat es la forma estándar y nativa más rápida de formatear fechas
+  const formatter = useMemo(() => {
+    return new Intl.DateTimeFormat(locale, dateTimeOptions);
+  }, [locale]);
 
   return (
     <div
@@ -51,30 +43,26 @@ export const TaskListTableDefault: React.FC<{
       style={{
         fontFamily: fontFamily,
         fontSize: fontSize,
+        // Inyectamos las variables dinámicas una sola vez en el padre
+        ["--row-height" as any]: `${rowHeight}px`,
+        ["--row-width" as any]: rowWidth,
       }}
     >
-      {tasks.map(t => {
-        let expanderSymbol = "";
-        if (t.hideChildren === false) {
-          expanderSymbol = "▼";
-        } else if (t.hideChildren === true) {
-          expanderSymbol = "▶";
-        }
+      {tasks.map((t) => {
+        // Determinamos el símbolo del expansor de forma limpia
+        const expanderSymbol =
+          t.hideChildren === false ? "▼" : t.hideChildren === true ? "▶" : "";
+
+        // Comprobamos si la fila actual es la seleccionada
+        const isSelected = t.id === selectedTaskId;
 
         return (
           <div
-            className={styles.taskListTableRow}
-            style={{ height: rowHeight }}
-            key={`${t.id}row`}
+            className={`${styles.taskListTableRow} ${isSelected ? styles.selectedRow : ""}`}
+            key={t.id} // Evita usar sufijos como 'row' si el id ya es único
+            onClick={() => setSelectedTask(t.id)}
           >
-            <div
-              className={styles.taskListCell}
-              style={{
-                minWidth: rowWidth,
-                maxWidth: rowWidth,
-              }}
-              title={t.name}
-            >
+            <div className={styles.taskListCell} title={t.name}>
               <div className={styles.taskListNameWrapper}>
                 <div
                   className={
@@ -82,30 +70,23 @@ export const TaskListTableDefault: React.FC<{
                       ? styles.taskListExpander
                       : styles.taskListEmptyExpander
                   }
-                  onClick={() => onExpanderClick(t)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Evita activar la selección de fila al expandir
+                    onExpanderClick(t);
+                  }}
                 >
                   {expanderSymbol}
                 </div>
                 <div>{t.name}</div>
               </div>
             </div>
-            <div
-              className={styles.taskListCell}
-              style={{
-                minWidth: rowWidth,
-                maxWidth: rowWidth,
-              }}
-            >
-              &nbsp;{toLocaleDateString(t.start, dateTimeOptions)}
+
+            <div className={styles.taskListCell}>
+              &nbsp;{formatter.format(t.start)}
             </div>
-            <div
-              className={styles.taskListCell}
-              style={{
-                minWidth: rowWidth,
-                maxWidth: rowWidth,
-              }}
-            >
-              &nbsp;{toLocaleDateString(t.end, dateTimeOptions)}
+
+            <div className={styles.taskListCell}>
+              &nbsp;{formatter.format(t.end)}
             </div>
           </div>
         );

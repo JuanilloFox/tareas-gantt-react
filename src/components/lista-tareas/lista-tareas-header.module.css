@@ -21,3 +21,24 @@
   vertical-align: -webkit-baseline-middle;
   vertical-align: middle;
 }
+
+.taskListTableRow {
+  display: flex;
+  align-items: center;
+  height: var(--row-height); /* Usa la variable inyectada */
+  cursor: pointer;
+}
+
+.taskListTableRow.selectedRow {
+  background-color: #f0f0f0; /* O el color de selección que prefieras */
+}
+
+.taskListCell {
+  box-sizing: border-box;
+  flex: 0 0 var(--row-width); /* Aplica el ancho dinámico de forma eficiente */
+  min-width: var(--row-width);
+  max-width: var(--row-width);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

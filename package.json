@@ -64,6 +64,8 @@
     "dist"
   ],
   "dependencies": {
+    "present": "^1.0.0",
+    "scripts": "^0.1.0",
     "tareas-gantt-react": "^1.0.0"
   }
 }

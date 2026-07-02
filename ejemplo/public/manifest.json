@@ -1,6 +1,6 @@
 {
-  "short_name": "gantt-task-react",
-  "name": "gantt-task-react",
+  "short_name": "tareas-gantt-react",
+  "name": "tareas-gantt-react",
   "icons": [
     {
       "src": "favicon.ico",

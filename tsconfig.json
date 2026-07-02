@@ -4,9 +4,10 @@
     "module": "esnext",
     "lib": [
       "dom",
+      "DOM.Iterable",
       "esnext"
     ],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsx": "react",
     "sourceMap": true,
     "declaration": true,
@@ -15,11 +16,11 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
+    //"suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es5",
+    "target": "es2022",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -34,6 +35,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "example"
+    "ejemplo"
   ]
 }
