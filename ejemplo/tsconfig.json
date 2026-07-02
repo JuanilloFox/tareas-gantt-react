@@ -4,10 +4,10 @@
     "module": "esnext",
     "lib": [
       "dom",
-      "DOM.Iterable",
+      "dom.Iterable",
       "esnext"
     ],
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext",
     "jsx": "react",
     "sourceMap": true,
     "declaration": true,

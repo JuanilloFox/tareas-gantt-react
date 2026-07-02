@@ -77,24 +77,34 @@ npm start
 |                      | boolean) => void               | deseleccionar un elemento de la barra de tareas.           |
 | onDoubleClick        | (task: Task) => void           | Especifica la función que se ejecutará en el evento        |
 |                      |                                | onDoubleClick de la barra de tareas.                       |
-| onClick              | (task: Task) => void                                                          | Specifies the function to be executed on the taskbar onClick event.                     |
-| onDelete\*           | (task: Task) => void/boolean/Promise<void>/Promise<boolean>                   | Specifies the function to be executed on the taskbar on Delete button press event.      |
-| onDateChange\*       | (task: Task, children: Task[]) => void/boolean/Promise<void>/Promise<boolean> | Specifies the function to be executed when drag taskbar event on timeline has finished. |
-| onProgressChange\*   | (task: Task, children: Task[]) => void/boolean/Promise<void>/Promise<boolean> | Specifies the function to be executed when drag taskbar progress event has finished.    |
-| onExpanderClick\*    | onExpanderClick: (task: Task) => void;                                        | Specifies the function to be executed on the table expander click                       |
-| timeStep             | number                                                                        | A time step value for onDateChange. Specify in milliseconds.                            |
+| onClick              | (task: Task) => void           | Especifica la función que se ejecutará en el evento        |
+|                      |                                | onClick de la barra de tareas.                             |
+| onDelete\*           | (task: Task) => void/boolean/  | Especifica la función que se ejecutará en la barra de      |
+|                      | Promise<void>/Promise<boolean> | tareas al pulsar el botón Eliminar.                        |
+| onDateChange\*       | (task: Task, children: Task[]) | Especifica la función que se ejecutará cuando finalice el  |
+|                      | => void/boolean/Promise<void>/ | evento de arrastrar la barra de tareas en la línea de      |
+|                      | Promise<boolean>               | tiempo.                                                    |
+| onProgressChange\*   | (task: Task, children: Task[]) | Especifica la función que se ejecutará cuando finalice el  |
+|                      | => void/boolean/Promise<void>/ | evento de progreso de arrastre de la barra de tareas.      |
+|                      | Promise<boolean>               |                                                            |
+| onExpanderClick\*    | onExpanderClick: (task: Task)  | Especifica la función que se ejecutará al hacer clic       |
+|                      | => void;                       | en el expansor de tabla.                                   |
+| timeStep             | number                         | Valor del intervalo de tiempo para onDateChange.           |
+|                      |                                | Especifique en milisegundos.                               |
 
 \* El gráfico deshace la operación si el método devuelve falso o error. El parámetro children devuelve registros de un nivel de profundidad.
 
 ### DisplayOption
 
-| Nombre del parámetro | Tipo    | Descripción                                                                                                 |
-| :------------- | :------ | :---------------------------------------------------------------------------------------------------------- |
-| viewMode       | enum    | Specifies the time scale. Hour, Quarter Day, Half Day, Day, Week(ISO-8601, 1st day is Monday), Month, QuarterYear, Year. |
-| viewDate       | date    | Specifies display date and time for display.                                                                |
-| preStepsCount  | number  | Specifies empty space before the fist task                                                                  |
-| locale         | string  | Specifies the month name language. Able formats: ISO 639-2, Java Locale.                                    |
-| rtl            | boolean | Sets rtl mode.                                                                                              |
+| Nombre del     |         |
+| parámetro      | Tipo    | Descripción                                                                            |
+| :------------- | :------ | :------------------------------------------------------------------------------------- |
+| viewMode       | enum    | Especifica la escala de tiempo. Hora, Cuarto de día, Medio día, Día, Semana            |
+|                |         |  (ISO-8601, el primer día es lunes), Mes, Trimestre, Año.                              |
+| viewDate       | date    | Especifica la fecha y la hora de visualización.                                        |
+| preStepsCount  | number  | Especifica un espacio vacío antes de la primera tarea.                                 |
+| locale         | string  | Especifica el idioma del nombre del mes. Formatos compatibles: ISO 639-2, Java Locale. |
+| rtl            | boolean | Configura el modo RTL.                                                                 |
 
 ### StylingOption
 

@@ -1,15 +1,20 @@
 .Wrapper {
   margin-bottom: 2rem;
 }
-.ViewContainer {
+/*.ViewContainer {
   list-style: none;
   -ms-box-orient: horizontal;
   display: flex;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
   align-items: center;
+} */
+.ViewContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  list-style: none;
 }
-
 .Button {
   background-color: #e7e7e7;
   color: black;
