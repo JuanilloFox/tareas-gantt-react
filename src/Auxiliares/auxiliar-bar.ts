@@ -2,11 +2,11 @@ import { Tarea } from "../types/public-types";
 import { BarraTareas, TareaTipoInterna } from "../types/barra-tareas";
 import { BarMoveAction } from "../types/tareas-gantt-actions";
 
-export const convertirABarraTareas = (
+export const convertirABarrasTareas = (
   tareas: Tarea[],
   dates: Date[],
-  columnWidth: number,
-  rowHeight: number,
+  anchoColumna: number,
+  altoFila: number,
   altoTarea: number,
   barCornerRadius: number,
   handleWidth: number,
@@ -15,20 +15,20 @@ export const convertirABarraTareas = (
   barProgressSelectedColor: string,
   barBackgroundColor: string,
   barBackgroundSelectedColor: string,
-  projectProgressColor: string,
-  projectProgressSelectedColor: string,
-  projectBackgroundColor: string,
-  projectBackgroundSelectedColor: string,
-  milestoneBackgroundColor: string,
-  milestoneBackgroundSelectedColor: string
+  proyectoProgressColor: string,
+  proyectoProgressSelectedColor: string,
+  proyectoBackgroundColor: string,
+  proyectoBackgroundSelectedColor: string,
+  hitoBackgroundColor: string,
+  hitoBackgroundSelectedColor: string
 ) => {
   let barraTareas = tareas.map((t, i) => {
     return convertirABarraTareas(
       t,
       i,
       dates,
-      columnWidth,
-      rowHeight,
+      anchoColumna,
+      altoFila,
       altoTarea,
       barCornerRadius,
       handleWidth,
@@ -37,16 +37,16 @@ export const convertirABarraTareas = (
       barProgressSelectedColor,
       barBackgroundColor,
       barBackgroundSelectedColor,
-      projectProgressColor,
-      projectProgressSelectedColor,
-      projectBackgroundColor,
-      projectBackgroundSelectedColor,
-      milestoneBackgroundColor,
-      milestoneBackgroundSelectedColor
+      proyectoProgressColor,
+      proyectoProgressSelectedColor,
+      proyectoBackgroundColor,
+      proyectoBackgroundSelectedColor,
+      hitoBackgroundColor,
+      hitoBackgroundSelectedColor
     );
   });
 
-  // set dependencies
+  // establecer depencias
   barraTareas = barraTareas.map(tarea => {
     const dependencias = tarea.dependencias || [];
     for (let j = 0; j < dependencias.length; j++) {
@@ -65,8 +65,8 @@ const convertirABarraTareas = (
   tarea: Tarea,
   index: number,
   dates: Date[],
-  columnWidth: number,
-  rowHeight: number,
+  anchoColumna: number,
+  altoFila: number,
   altoTarea: number,
   barCornerRadius: number,
   handleWidth: number,
@@ -75,27 +75,27 @@ const convertirABarraTareas = (
   barProgressSelectedColor: string,
   barBackgroundColor: string,
   barBackgroundSelectedColor: string,
-  projectProgressColor: string,
-  projectProgressSelectedColor: string,
-  projectBackgroundColor: string,
-  projectBackgroundSelectedColor: string,
-  milestoneBackgroundColor: string,
-  milestoneBackgroundSelectedColor: string
+  proyectoProgressColor: string,
+  proyectoProgressSelectedColor: string,
+  proyectoBackgroundColor: string,
+  proyectoBackgroundSelectedColor: string,
+  hitoBackgroundColor: string,
+  hitoBackgroundSelectedColor: string
 ): BarraTareas => {
   let barraTareas: BarraTareas;
   switch (tarea.tipo) {
-    case "milestone":
-      barraTareas = convertToMilestone(
+    case "hito":
+      barraTareas = convertirAHito(
         tarea,
         index,
         dates,
-        columnWidth,
-        rowHeight,
+        anchoColumna,
+        altoFila,
         altoTarea,
         barCornerRadius,
         handleWidth,
-        milestoneBackgroundColor,
-        milestoneBackgroundSelectedColor
+        hitoBackgroundColor,
+        hitoBackgroundSelectedColor
       );
       break;
     case "proyecto":
@@ -103,16 +103,16 @@ const convertirABarraTareas = (
         tarea,
         index,
         dates,
-        columnWidth,
-        rowHeight,
+        anchoColumna,
+        altoFila,
         altoTarea,
         barCornerRadius,
         handleWidth,
         rtl,
-        projectProgressColor,
-        projectProgressSelectedColor,
-        projectBackgroundColor,
-        projectBackgroundSelectedColor
+        proyectoProgressColor,
+        proyectoProgressSelectedColor,
+        proyectoBackgroundColor,
+        proyectoBackgroundSelectedColor
       );
       break;
     default:
@@ -120,8 +120,8 @@ const convertirABarraTareas = (
         tarea,
         index,
         dates,
-        columnWidth,
-        rowHeight,
+        anchoColumna,
+        altoFila,
         altoTarea,
         barCornerRadius,
         handleWidth,
@@ -140,8 +140,8 @@ const convertToBar = (
   tarea: Tarea,
   index: number,
   dates: Date[],
-  columnWidth: number,
-  rowHeight: number,
+  anchoColumna: number,
+  altoFila: number,
   altoTarea: number,
   barCornerRadius: number,
   handleWidth: number,
@@ -154,25 +154,25 @@ const convertToBar = (
   let x1: number;
   let x2: number;
   if (rtl) {
-    x2 = taskXCoordinateRTL(tarea.inicio, dates, columnWidth);
-    x1 = taskXCoordinateRTL(tarea.fin, dates, columnWidth);
+    x2 = CoordenadaXTareaRTL(tarea.inicio, dates, anchoColumna);
+    x1 = CoordenadaXTareaRTL(tarea.fin, dates, anchoColumna);
   } else {
-    x1 = taskXCoordinate(tarea.inicio, dates, columnWidth);
-    x2 = taskXCoordinate(tarea.fin, dates, columnWidth);
+    x1 = CoordenadaXTarea(tarea.inicio, dates, anchoColumna);
+    x2 = CoordenadaXTarea(tarea.fin, dates, anchoColumna);
   }
-  let typeInternal: TareaTipoInterna = tarea.tipo;
-  if (typeInternal === "tarea" && x2 - x1 < handleWidth * 2) {
-    typeInternal = "smalltask";
+  let tipoInterno: TareaTipoInterna = tarea.tipo;
+  if (tipoInterno === "tarea" && x2 - x1 < handleWidth * 2) {
+    tipoInterno = "smalltask";
     x2 = x1 + handleWidth * 2;
   }
 
-  const [progressWidth, progressX] = progressWithByParams(
+  const [anchoProgreso, progresoX] = progressWithByParams(
     x1,
     x2,
     tarea.progreso,
     rtl
   );
-  const y = taskYCoordinate(index, rowHeight, altoTarea);
+  const y = CoordenadaYTarea(index, altoFila, altoTarea);
   const hideChildren = tarea.tipo === "proyecto" ? tarea.hideChildren : undefined;
 
   const styles = {
@@ -184,44 +184,44 @@ const convertToBar = (
   };
   return {
     ...tarea,
-    typeInternal,
+    tipoInterno,
     x1,
     x2,
     y,
     index,
-    progressX,
-    progressWidth,
+    progresoX,
+    anchoProgreso,
     barCornerRadius,
     handleWidth,
     hideChildren,
-    height: altoTarea,
+    Alto: altoTarea,
     barChildren: [],
     styles,
   };
 };
 
-const convertToMilestone = (
+const convertirAHito = (
   tarea: Tarea,
   index: number,
   dates: Date[],
-  columnWidth: number,
+  anchoColumna: number,
   rowHeight: number,
   altoTarea: number,
   barCornerRadius: number,
   handleWidth: number,
-  milestoneBackgroundColor: string,
-  milestoneBackgroundSelectedColor: string
+  hitoBackgroundColor: string,
+  hitoBackgroundSelectedColor: string
 ): BarraTareas => {
-  const x = taskXCoordinate(tarea.inicio, dates, columnWidth);
-  const y = taskYCoordinate(index, rowHeight, altoTarea);
+  const x = CoordenadaXTarea(tarea.inicio, dates, anchoColumna);
+  const y = CoordenadaYTarea(index, rowHeight, altoTarea);
 
   const x1 = x - altoTarea * 0.5;
   const x2 = x + altoTarea * 0.5;
 
   const rotatedHeight = altoTarea / 1.414;
   const styles = {
-    backgroundColor: milestoneBackgroundColor,
-    backgroundSelectedColor: milestoneBackgroundSelectedColor,
+    backgroundColor: hitoBackgroundColor,
+    backgroundSelectedColor: hitoBackgroundSelectedColor,
     progressColor: "",
     progressSelectedColor: "",
     ...tarea.styles,
@@ -233,38 +233,38 @@ const convertToMilestone = (
     x2,
     y,
     index,
-    progressX: 0,
-    progressWidth: 0,
+    progresoX: 0,
+    anchoProgreso: 0,
     barCornerRadius,
     handleWidth,
-    typeInternal: tarea.tipo,
+    tipoInterno: tarea.tipo,
     progreso: 0,
-    height: rotatedHeight,
+    Alto: rotatedHeight,
     hideChildren: undefined,
     barChildren: [],
     styles,
   };
 };
 
-const taskXCoordinate = (xDate: Date, dates: Date[], columnWidth: number) => {
+const CoordenadaXTarea = (xDate: Date, dates: Date[], anchoColumna: number) => {
   const index = dates.findIndex(d => d.getTime() >= xDate.getTime()) - 1;
 
   const remainderMillis = xDate.getTime() - dates[index].getTime();
   const percentOfInterval =
     remainderMillis / (dates[index + 1].getTime() - dates[index].getTime());
-  const x = index * columnWidth + percentOfInterval * columnWidth;
+  const x = index * anchoColumna + percentOfInterval * anchoColumna;
   return x;
 };
-const taskXCoordinateRTL = (
+const CoordenadaXTareaRTL = (
   xDate: Date,
   dates: Date[],
-  columnWidth: number
+  anchoColumna: number
 ) => {
-  let x = taskXCoordinate(xDate, dates, columnWidth);
-  x += columnWidth;
+  let x = CoordenadaXTarea(xDate, dates, anchoColumna);
+  x += anchoColumna;
   return x;
 };
-const taskYCoordinate = (
+const CoordenadaYTarea = (
   index: number,
   rowHeight: number,
   altoTarea: number
@@ -290,11 +290,11 @@ export const progressWithByParams = (
 };
 
 export const progressByProgressWidth = (
-  progressWidth: number,
+  anchoProgreso: number,
   barraTareas: BarraTareas
 ) => {
   const barWidth = barraTareas.x2 - barraTareas.x1;
-  const progressPercent = Math.round((progressWidth * 100) / barWidth);
+  const progressPercent = Math.round((anchoProgreso * 100) / barWidth);
   if (progressPercent >= 100) return 100;
   else if (progressPercent <= 0) return 0;
   else return progressPercent;
@@ -366,14 +366,14 @@ const moveByX = (x: number, xStep: number, tarea: BarraTareas) => {
 const dateByX = (
   x: number,
   tareaX: number,
-  taskDate: Date,
+  fechaTarea: Date,
   xStep: number,
   timeStep: number
 ) => {
-  let newDate = new Date(((x - tareaX) / xStep) * timeStep + taskDate.getTime());
+  let newDate = new Date(((x - tareaX) / xStep) * timeStep + fechaTarea.getTime());
   newDate = new Date(
     newDate.getTime() +
-      (newDate.getTimezoneOffset() - taskDate.getTimezoneOffset()) * 60000
+      (newDate.getTimezoneOffset() - fechaTarea.getTimezoneOffset()) * 60000
   );
   return newDate;
 };
@@ -381,32 +381,32 @@ const dateByX = (
 /**
  * Method handles event in real time(mousemove) and on finish(mouseup)
  */
-export const handleTaskBySVGMouseEvent = (
+export const handleTareaPorEventoRatonSVG = (
   svgX: number,
   action: BarMoveAction,
-  selectedTask: BarraTareas,
+  tareaSeleccionada: BarraTareas,
   xStep: number,
   timeStep: number,
   initEventX1Delta: number,
   rtl: boolean
 ): { isChanged: boolean; tareaCambiada: BarraTareas } => {
   let result: { isChanged: boolean; tareaCambiada: BarraTareas };
-  switch (selectedTask.tipo) {
-    case "milestone":
-      result = handleTaskBySVGMouseEventForMilestone(
+  switch (tareaSeleccionada.tipo) {
+    case "hito":
+      result = handleTareaPorEventoRatonSVGPorHito(
         svgX,
         action,
-        selectedTask,
+        tareaSeleccionada,
         xStep,
         timeStep,
         initEventX1Delta
       );
       break;
     default:
-      result = handleTaskBySVGMouseEventForBar(
+      result = handleTareaPorEventoRatonSVGPorBarra(
         svgX,
         action,
-        selectedTask,
+        tareaSeleccionada,
         xStep,
         timeStep,
         initEventX1Delta,
@@ -417,99 +417,99 @@ export const handleTaskBySVGMouseEvent = (
   return result;
 };
 
-const handleTaskBySVGMouseEventForBar = (
+const handleTareaPorEventoRatonSVGPorBarra = (
   svgX: number,
   action: BarMoveAction,
-  selectedTask: BarraTareas,
+  tareaSeleccionada: BarraTareas,
   xStep: number,
   timeStep: number,
   initEventX1Delta: number,
   rtl: boolean
 ): { isChanged: boolean; tareaCambiada: BarraTareas } => {
-  const tareaCambiada: BarraTareas = { ...selectedTask };
+  const tareaCambiada: BarraTareas = { ...tareaSeleccionada };
   let isChanged = false;
   switch (action) {
     case "progreso":
       if (rtl) {
-        tareaCambiada.progreso = progressByXRTL(svgX, selectedTask);
+        tareaCambiada.progreso = progressByXRTL(svgX, tareaSeleccionada);
       } else {
-        tareaCambiada.progreso = progressByX(svgX, selectedTask);
+        tareaCambiada.progreso = progressByX(svgX, tareaSeleccionada);
       }
-      isChanged = tareaCambiada.progreso !== selectedTask.progreso;
+      isChanged = tareaCambiada.progreso !== tareaSeleccionada.progreso;
       if (isChanged) {
-        const [progressWidth, progressX] = progressWithByParams(
+        const [anchoProgreso, progresoX] = progressWithByParams(
           tareaCambiada.x1,
           tareaCambiada.x2,
           tareaCambiada.progreso,
           rtl
         );
-        tareaCambiada.progressWidth = progressWidth;
-        tareaCambiada.progressX = progressX;
+        tareaCambiada.anchoProgreso  = anchoProgreso;
+        tareaCambiada.progresoX = progresoX;
       }
       break;
     case "inicio": {
-      const newX1 = startByX(svgX, xStep, selectedTask);
+      const newX1 = startByX(svgX, xStep, tareaSeleccionada);
       tareaCambiada.x1 = newX1;
-      isChanged = tareaCambiada.x1 !== selectedTask.x1;
+      isChanged = tareaCambiada.x1 !== tareaSeleccionada.x1;
       if (isChanged) {
         if (rtl) {
           tareaCambiada.fin = dateByX(
             newX1,
-            selectedTask.x1,
-            selectedTask.fin,
+            tareaSeleccionada.x1,
+            tareaSeleccionada.fin,
             xStep,
             timeStep
           );
         } else {
           tareaCambiada.inicio = dateByX(
             newX1,
-            selectedTask.x1,
-            selectedTask.inicio,
+            tareaSeleccionada.x1,
+            tareaSeleccionada.inicio,
             xStep,
             timeStep
           );
         }
-        const [progressWidth, progressX] = progressWithByParams(
+        const [anchoProgreso, progresoX] = progressWithByParams(
           tareaCambiada.x1,
           tareaCambiada.x2,
           tareaCambiada.progreso,
           rtl
         );
-        tareaCambiada.progressWidth = progressWidth;
-        tareaCambiada.progressX = progressX;
+        tareaCambiada.anchoProgreso  = anchoProgreso;
+        tareaCambiada.progresoX = progresoX;
       }
       break;
     }
     case "fin": {
-      const newX2 = endByX(svgX, xStep, selectedTask);
+      const newX2 = endByX(svgX, xStep, tareaSeleccionada);
       tareaCambiada.x2 = newX2;
-      isChanged = tareaCambiada.x2 !== selectedTask.x2;
+      isChanged = tareaCambiada.x2 !== tareaSeleccionada.x2;
       if (isChanged) {
         if (rtl) {
           tareaCambiada.inicio = dateByX(
             newX2,
-            selectedTask.x2,
-            selectedTask.inicio,
+            tareaSeleccionada.x2,
+            tareaSeleccionada.inicio,
             xStep,
             timeStep
           );
         } else {
           tareaCambiada.fin = dateByX(
             newX2,
-            selectedTask.x2,
-            selectedTask.fin,
+            tareaSeleccionada.x2,
+            tareaSeleccionada.fin,
             xStep,
             timeStep
           );
         }
-        const [progressWidth, progressX] = progressWithByParams(
+        const [anchoProgreso, progresoX] = progressWithByParams(
           tareaCambiada.x1,
           tareaCambiada.x2,
           tareaCambiada.progreso,
           rtl
         );
-        tareaCambiada.progressWidth = progressWidth;
-        tareaCambiada.progressX = progressX;
+        tareaCambiada.anchoProgreso  = anchoProgreso;
+        tareaCambiada.progresoX = progresoX;
       }
       break;
     }
@@ -517,34 +517,34 @@ const handleTaskBySVGMouseEventForBar = (
       const [newMoveX1, newMoveX2] = moveByX(
         svgX - initEventX1Delta,
         xStep,
-        selectedTask
+        tareaSeleccionada
       );
-      isChanged = newMoveX1 !== selectedTask.x1;
+      isChanged = newMoveX1 !== tareaSeleccionada.x1;
       if (isChanged) {
         tareaCambiada.inicio = dateByX(
           newMoveX1,
-          selectedTask.x1,
-          selectedTask.inicio,
+          tareaSeleccionada.x1,
+          tareaSeleccionada.inicio,
           xStep,
           timeStep
         );
         tareaCambiada.fin = dateByX(
           newMoveX2,
-          selectedTask.x2,
-          selectedTask.fin,
+          tareaSeleccionada.x2,
+          tareaSeleccionada.fin,
           xStep,
           timeStep
         );
         tareaCambiada.x1 = newMoveX1;
         tareaCambiada.x2 = newMoveX2;
-        const [progressWidth, progressX] = progressWithByParams(
+        const [anchoProgreso, progresoX] = progressWithByParams(
           tareaCambiada.x1,
           tareaCambiada.x2,
           tareaCambiada.progreso,
           rtl
         );
-        tareaCambiada.progressWidth = progressWidth;
-        tareaCambiada.progressX = progressX;
+        tareaCambiada.anchoProgreso  = anchoProgreso;
+        tareaCambiada.progresoX = progresoX;
       }
       break;
     }
@@ -552,29 +552,29 @@ const handleTaskBySVGMouseEventForBar = (
   return { isChanged, tareaCambiada };
 };
 
-const handleTaskBySVGMouseEventForMilestone = (
+const handleTareaPorEventoRatonSVGPorHito = (
   svgX: number,
   action: BarMoveAction,
-  selectedTask: BarraTareas,
+  tareaSeleccionada: BarraTareas,
   xStep: number,
   timeStep: number,
   initEventX1Delta: number
 ): { isChanged: boolean; tareaCambiada: BarraTareas } => {
-  const tareaCambiada: BarraTareas = { ...selectedTask };
+  const tareaCambiada: BarraTareas = { ...tareaSeleccionada };
   let isChanged = false;
   switch (action) {
     case "mover": {
       const [newMoveX1, newMoveX2] = moveByX(
         svgX - initEventX1Delta,
         xStep,
-        selectedTask
+        tareaSeleccionada
       );
-      isChanged = newMoveX1 !== selectedTask.x1;
+      isChanged = newMoveX1 !== tareaSeleccionada.x1;
       if (isChanged) {
         tareaCambiada.inicio = dateByX(
           newMoveX1,
-          selectedTask.x1,
-          selectedTask.inicio,
+          tareaSeleccionada.x1,
+          tareaSeleccionada.inicio,
           xStep,
           timeStep
         );

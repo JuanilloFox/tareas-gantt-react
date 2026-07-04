@@ -8,7 +8,7 @@ export type GridBodyProps = {
   dates: Date[];
   svgWidth: number;
   rowHeight: number;
-  columnWidth: number;
+  anchoColumna: number;
   todayColor: string;
   rtl: boolean;
 };
@@ -17,7 +17,7 @@ export const GridBody: React.FC<GridBodyProps> = ({
   dates,
   rowHeight,
   svgWidth,
-  columnWidth,
+  anchoColumna,
   todayColor,
   rtl,
 }) => {
@@ -91,7 +91,7 @@ export const GridBody: React.FC<GridBodyProps> = ({
         <rect
           x={tickX}
           y={0}
-          width={columnWidth}
+          width={anchoColumna}
           height={y}
           fill={todayColor}
         />
@@ -106,15 +106,15 @@ export const GridBody: React.FC<GridBodyProps> = ({
     ) {
       today = (
         <rect
-          x={tickX + columnWidth}
+          x={tickX + anchoColumna}
           y={0}
-          width={columnWidth}
+          width={anchoColumna}
           height={y}
           fill={todayColor}
         />
       );
     }
-    tickX += columnWidth;
+    tickX += anchoColumna;
   }
   return (
     <g className="gridBody">

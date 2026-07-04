@@ -2,13 +2,13 @@ import { Tarea, TipoTarea } from "./public-types";
 
 export interface BarraTareas extends Tarea {
   index: number;
-  typeInternal: TareaTipoInterna;
+  tipoInterno: TareaTipoInterna;
   x1: number;
   x2: number;
   y: number;
-  height: number;
-  progressX: number;
-  progressWidth: number;
+  Alto: number;
+  progresoX: number;
+  anchoProgreso: number;
   barCornerRadius: number;
   handleWidth: number;
   barChildren: BarraTareas[];

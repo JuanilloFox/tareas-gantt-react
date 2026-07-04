@@ -15,10 +15,10 @@ npm install tareas-gantt-react
 ## How to use it
 
 ```javascript
-import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from 'tareas-gantt-react';
+import { Gantt, Tarea, EventOption, StylingOption, ViewMode, DisplayOption } from 'tareas-gantt-react';
 import "tareas-gantt-react/dist/index.css";
 
-let tareas: Task[] = [
+let tareas: Tarea[] = [
     {
       inicio: new Date(2020, 1, 1),
       fin: new Date(2020, 1, 2),
@@ -40,8 +40,8 @@ Puedes manejar acciones
 <Gantt
   tareas={tareas}
   viewMode={view}
-  onDateChange={onTaskChange}
-  onTaskDelete={onTaskDelete}
+  onDateChange={onCambioTarea}
+  onBorradoTarea={onBorradoTarea}
   onProgressChange={onProgressChange}
   onDoubleClick={onDblClick}
   onClick={onClick}
@@ -60,37 +60,37 @@ npm start
 
 ### GanttProps
 
-| Nombre del parámetro            | Tipo          | Descripción                                        |
-| :------------------------------ | :------------ | :------------------------------------------------- |
-| tareas\*                        | [Task](#Task) | Matriz de tareas.                                  |
-| [EventOption](#EventOption)     | interface     | Especifica los eventos de Gantt.                   |
-| [DisplayOption](#DisplayOption) | interface     | Especifica el tipo de vista y el idioma de la      |
-|                                 |               | línea de tiempo que se muestra.                    |
-| [StylingOption](#StylingOption) | interface     | Especifica los estilos de gráficos y tareas        |
-|                                 |               | globales.                                          |
+| Nombre del parámetro            | Tipo            | Descripción                                        |
+| :------------------------------ | :-------------- | :------------------------------------------------- |
+| tareas\*                        | [Tarea](#Tarea) | Matriz de tareas.                                  |
+| [EventOption](#EventOption)     | interface       | Especifica los eventos de Gantt.                   |
+| [DisplayOption](#DisplayOption) | interface       | Especifica el tipo de vista y el idioma de la      |
+|                                 |                 | línea de tiempo que se muestra.                    |
+| [StylingOption](#StylingOption) | interface       | Especifica los estilos de gráficos y tareas        |
+|                                 |                 | globales.                                          |
 
 ### EventOption
 
-| Nombre del parámetro | Tipo                           | Descripción                                                |
-| :------------------- | :----------------------------- | :--------------------------------------------------------- |
-| onSelect             | (tarea: Task, isSelected:      | Especifica la función que se ejecutará al seleccionar o    |
-|                      | boolean) => void               | deseleccionar un elemento de la barra de tareas.           |
-| onDoubleClick        | (tarea: Task) => void          | Especifica la función que se ejecutará en el evento        |
-|                      |                                | onDoubleClick de la barra de tareas.                       |
-| onClick              | (tarea: Task) => void          | Especifica la función que se ejecutará en el evento        |
-|                      |                                | onClick de la barra de tareas.                             |
-| onDelete\*           | (tarea: Task) => void/boolean/ | Especifica la función que se ejecutará en la barra de      |
-|                      | Promise<void>/Promise<boolean> | tareas al pulsar el botón Eliminar.                        |
-| onDateChange\*       | (tarea: Task, children: Task[])| Especifica la función que se ejecutará cuando finalice el  |
-|                      | => void/boolean/Promise<void>/ | evento de arrastrar la barra de tareas en la línea de      |
-|                      | Promise<boolean>               | tiempo.                                                    |
-| onProgressChange\*   | (tarea: Task, children: Task[])| Especifica la función que se ejecutará cuando finalice el  |
-|                      | => void/boolean/Promise<void>/ | evento de progreso de arrastre de la barra de tareas.      |
-|                      | Promise<boolean>               |                                                            |
-| onExpanderClick\*    | onExpanderClick: (tarea: Task) | Especifica la función que se ejecutará al hacer clic       |
-|                      | => void;                       | en el expansor de tabla.                                   |
-| timeStep             | number                         | Valor del intervalo de tiempo para onDateChange.           |
-|                      |                                | Especifique en milisegundos.                               |
+| Nombre del parámetro | Tipo                             | Descripción                                                |
+| :------------------- | :------------------------------- | :--------------------------------------------------------- |
+| onSelect             | (tarea: Tarea, isSelected:       | Especifica la función que se ejecutará al seleccionar o    |
+|                      | boolean) => void                 | deseleccionar un elemento de la barra de tareas.           |
+| onDoubleClick        | (tarea: Tarea) => void           | Especifica la función que se ejecutará en el evento        |
+|                      |                                  | onDoubleClick de la barra de tareas.                       |
+| onClick              | (tarea: Tarea) => void           | Especifica la función que se ejecutará en el evento        |
+|                      |                                  | onClick de la barra de tareas.                             |
+| onDelete\*           | (tarea: Tarea) => void/boolean/  | Especifica la función que se ejecutará en la barra de      |
+|                      | Promise<void>/Promise<boolean>   | tareas al pulsar el botón Eliminar.                        |
+| onDateChange\*       | (tarea: Tarea, children: Tarea[])| Especifica la función que se ejecutará cuando finalice el  |
+|                      | => void/boolean/Promise<void>/   | evento de arrastrar la barra de tareas en la línea de      |
+|                      | Promise<boolean>                 | tiempo.                                                    |
+| onProgressChange\*   | (tarea: Tarea, children: Tarea[])| Especifica la función que se ejecutará cuando finalice el  |
+|                      | => void/boolean/Promise<void>/   | evento de progreso de arrastre de la barra de tareas.      |
+|                      | Promise<boolean>                 |                                                            |
+| onExpanderClick\*    | onExpanderClick: (tarea: Tarea)  | Especifica la función que se ejecutará al hacer clic       |
+|                      | => void;                         | en el expansor de tabla.                                   |
+| timeStep             | number                           | Valor del intervalo de tiempo para onDateChange.           |
+|                      |                                  | Especifique en milisegundos.                               |
 
 \* El gráfico deshace la operación si el método devuelve falso o error. El parámetro children devuelve registros de un nivel de profundidad.
 
@@ -113,7 +113,7 @@ npm start
 | headerHeight               | number | Especifica la altura del encabezado.                                        |
 | ganttHeight                | number | Especifica la altura del diagrama de Gantt sin encabezado. El valor         |
 |                            |        | predeterminado es 0. Esto significa que no hay limitación de altura.        |
-| columnWidth                | number | Especifica la duración del período de tiempo.                               |
+| anchoColumna               | number | Especifica la duración del período de tiempo.                               |
 | listCellWidth              | string | Especifica el ancho de la celda de la lista de tareas. Una cadena vacía     |
 |                            |        | significa "no mostrar".                                                     |
 | rowHeight                  | number | Especifica la altura de la fila de tareas.                                  |
@@ -138,21 +138,21 @@ npm start
 | todayColor                 | string | Especifica el color de relleno de la columna del período actual.            |
 | TooltipContent             |        | Especifica la vista de información sobre herramientas para la barra de      |
 |                            |        | tareas seleccionada.                                                        |
-| TaskListHeader             |        | Especifica la vista de encabezado de la lista de tareas                     |
-| TaskListTable              |        | Especifica la vista de tabla de la lista de tareas                          |
+| ListaTareasHeader          |        | Especifica la vista de encabezado de la lista de tareas                     |
+| ListaTareasTable           |        | Especifica la vista de tabla de la lista de tareas                          |
 
-- TooltipContent: [`React.FC<{ task: Task; fontSize: string; fontFamily: string; }>;`](https://github.com/JuanilloFox/tareas-gantt-react/blob/main/src/components/other/tooltip.tsx#L56)
-- TaskListHeader: `React.FC<{ headerHeight: number; rowWidth: string; fontFamily: string; fontSize: string;}>;`
-- TaskListTable: `React.FC<{ rowHeight: number; rowWidth: string; fontFamily: string; fontSize: string; locale: string; tasks: Task[]; tareaSeleccionadaId: string; setTareaSeleccionada: (treaId: string) => void; }>;`
+- TooltipContent: [`React.FC<{ tarea: Tarea; fontSize: string; fontFamily: string; }>;`](https://github.com/JuanilloFox/tareas-gantt-react/blob/main/src/components/other/tooltip.tsx#L56)
+- ListaTareasHeader: `React.FC<{ headerHeight: number; rowWidth: string; fontFamily: string; fontSize: string;}>;`
+- ListaTareasTable: `React.FC<{ rowHeight: number; rowWidth: string; fontFamily: string; fontSize: string; locale: string; tareas: Tarea[]; tareaSeleccionadaId: string; setTareaSeleccionada: (treaId: string) => void; }>;`
 
-### Task
+### Tarea
 
 | Nombre del                                                                                                         |
 | parámetro      | Tipo     | Descripción                                                                            |
 | :------------- | :------- | :------------------------------------------------------------------------------------- |
 | id\*           | string   | ID de tarea.                                                                           |
 | nombre\*       | string   | Nombre visual de la tarea.                                                             |
-| tipo\*         | string   | Tipo de visualización de tareas: **tarea**, **milestone**, **proyecto**                |
+| tipo\*         | string   | Tipo de visualización de tareas: **tarea**, **hito**, **proyecto**                |
 | inicio\*       | Date     | Fecha de inicio de la tarea.                                                           |
 | fin\*          | Date     | Fin de la tarea date.                                                                  |
 | progreso\*     | number   | Progreso de la tarea. Se muestra en porcentaje de 0 a 100.                             |
@@ -169,7 +169,7 @@ npm start
 |                |          |   progreso de forma global al seleccionarla.                                           |
 | isDisabled     | bool     | Deshabilita todas las acciones para la tarea actual.                                   |
 | fontSize       | string   | Especifica el tamaño de fuente de la barra de tareas localmente.                       |
-| proyecto       | string   |Nombre del proyecto de tarea                                                            |
+| proyecto       | string   | Nombre del proyecto de tarea                                                           |
 | hideChildren   | bool     | Ocultar elementos secundarios. El parámetro funciona solo con el tipo de proyecto.     |
 
 \*Requerido

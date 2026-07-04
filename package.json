@@ -42,7 +42,8 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.2.1",
-    "@types/jest": "^27.5.1",
+    "@types/jest": "^27.5.2",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^15.0.1",
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.5",
@@ -67,5 +68,9 @@
     "present": "^1.0.0",
     "scripts": "^0.1.0",
     "tareas-gantt-react": "^1.0.0"
+  },
+  "allowScripts": {
+    "core-js-pure@3.49.0": true,
+    "core-js@2.6.12": true
   }
 }

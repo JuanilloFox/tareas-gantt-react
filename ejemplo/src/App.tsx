@@ -1,53 +1,53 @@
 import React from "react";
 import { Tarea, ViewMode, Gantt } from "tareas-gantt-react";
 import { ViewSwitcher } from "./components/view-switcher";
-import { getStartEndDateForProject, initTasks } from "./Auxiliar";
+import { getFechaInicioFinParaProyecto, initTareas } from "./Auxiliar";
 //import "tareas-gantt-react/dist/index.css";
-import "tareas-gantt-react/dist/index.css";
+import "tareas-gantt-react/dist/index.css" ;
 
 // Init
 const App = () => {
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
-  const [tareas, setTasks] = React.useState<Tarea[]>(initTasks());
+  const [tareas, setTareas] = React.useState<Tarea[]>(initTareas());
   const [isChecked, setIsChecked] = React.useState(true);
-  let columnWidth = 65;
+  let anchoColumna = 65;
   if (view === ViewMode.Year) {
-    columnWidth = 350;
+    anchoColumna = 350;
   } else if (view === ViewMode.Month) {
-    columnWidth = 300;
+    anchoColumna = 300;
   } else if (view === ViewMode.Week) {
-    columnWidth = 250;
+    anchoColumna = 250;
   }
 
-  const handleTaskChange = (tarea: Tarea) => {
+  const handleCambioTarea = (tarea: Tarea) => {
     console.log("En cambio de fecha Id:" + tarea.id);
     let nuevasTareas = tareas.map(t => (t.id === tarea.id ? tarea : t));
     if (tarea.proyecto) {
-      const [inicio, fin] = getStartEndDateForProject(nuevasTareas, tarea.proyecto);
+      const [inicio, fin] = getFechaInicioFinParaProyecto(nuevasTareas, tarea.proyecto);
       const proyecto = nuevasTareas[nuevasTareas.findIndex(t => t.id === tarea.proyecto)];
       if (
         proyecto.inicio.getTime() !== inicio.getTime() ||
         proyecto.fin.getTime() !== fin.getTime()
       ) {
-        const changedProject = { ...proyecto, inicio, fin };
+        const proyectoCambiado = { ...proyecto, inicio, fin };
         nuevasTareas = nuevasTareas.map(t =>
-          t.id === tarea.proyecto ? changedProject : t
+          t.id === tarea.proyecto ? proyectoCambiado : t
         );
       }
     }
-    setTasks(nuevasTareas);
+    setTareas(nuevasTareas);
   };
 
-  const handleTaskDelete = (tarea: Tarea) => {
+  const handleBorradoTarea = (tarea: Tarea) => {
     const conf = window.confirm("Estas seguro de " + tarea.nombre + " ?");
     if (conf) {
-      setTasks(tareas.filter(t => t.id !== tarea.id));
+      setTareas(tareas.filter(t => t.id !== tarea.id));
     }
     return conf;
   };
 
   const handleProgressChange = async (tarea: Tarea) => {
-    setTasks(tareas.map(t => (t.id === tarea.id ? tarea : t)));
+    setTareas(tareas.map(t => (t.id === tarea.id ? tarea : t)));
     console.log("En progreso, cambio de ID:" + tarea.id);
   };
 
@@ -64,7 +64,7 @@ const App = () => {
   };
 
   const handleExpanderClick = (tarea: Tarea) => {
-    setTasks(tareas.map(t => (t.id === tarea.id ? tarea : t)));
+    setTareas(tareas.map(t => (t.id === tarea.id ? tarea : t)));
     console.log("Id al hacer clic en elexpansor:" + tarea.id);
   };
 
@@ -79,22 +79,22 @@ const App = () => {
       <Gantt
         tareas={tareas}
         viewMode={view}
-        onDateChange={handleTaskChange}
-        onDelete={handleTaskDelete}
+        onDateChange={handleCambioTarea}
+        onDelete={handleBorradoTarea}
         onProgressChange={handleProgressChange}
         onDoubleClick={handleDblClick}
         onClick={handleClick}
         onSelect={handleSelect}
         onExpanderClick={handleExpanderClick}
         listCellWidth={isChecked ? "155px" : ""}
-        columnWidth={columnWidth}
+        anchoColumna={anchoColumna}
       />
       <h3>Gantt With Limited Height</h3>
       <Gantt
         tareas={tareas}
         viewMode={view}
-        onDateChange={handleTaskChange}
-        onDelete={handleTaskDelete}
+        onDateChange={handleCambioTarea}
+        onDelete={handleBorradoTarea}
         onProgressChange={handleProgressChange}
         onDoubleClick={handleDblClick}
         onClick={handleClick}
@@ -102,7 +102,7 @@ const App = () => {
         onExpanderClick={handleExpanderClick}
         listCellWidth={isChecked ? "155px" : ""}
         ganttHeight={300}
-        columnWidth={columnWidth}
+        anchoColumna={anchoColumna}
       />
     </div>
   );

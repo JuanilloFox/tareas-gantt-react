@@ -9,7 +9,7 @@ export enum ViewMode {
   QuarterYear = "Cuarto de Año",
   Year = "Año",
 }
-export type TipoTarea = "tarea" | "milestone" | "proyecto";
+export type TipoTarea = "tarea" | "hito" | "proyecto";
 export interface Tarea {
   id: string;
   tipo: TipoTarea;
@@ -90,7 +90,7 @@ export interface DisplayOption {
 
 export interface StylingOption {
   headerHeight?: number;
-  columnWidth?: number;
+  anchoColumna?: number;
   listCellWidth?: string;
   rowHeight?: number;
   ganttHeight?: number;
@@ -107,12 +107,12 @@ export interface StylingOption {
   barProgressSelectedColor?: string;
   barBackgroundColor?: string;
   barBackgroundSelectedColor?: string;
-  projectProgressColor?: string;
-  projectProgressSelectedColor?: string;
-  projectBackgroundColor?: string;
-  projectBackgroundSelectedColor?: string;
-  milestoneBackgroundColor?: string;
-  milestoneBackgroundSelectedColor?: string;
+  proyectoProgressColor?: string;
+  proyectoProgressSelectedColor?: string;
+  proyectoBackgroundColor?: string;
+  proyectoBackgroundSelectedColor?: string;
+  hitoBackgroundColor?: string;
+  hitoBackgroundSelectedColor?: string;
   arrowColor?: string;
   arrowIndent?: number;
   todayColor?: string;

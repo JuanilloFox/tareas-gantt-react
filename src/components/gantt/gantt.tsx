@@ -17,7 +17,7 @@ import { VerticalScroll } from "../other/vertical-scroll";
 import { ListaTareasProps, ListaTareas } from "../lista-tareas/lista-tareas";
 import { TareaGantt } from "./tarea-gantt";
 import { BarraTareas } from "../../types/barra-tareas";
-import { convertirABarraTareas } from "../../Auxiliares/auxiliar-bar";
+import { convertirABarrasTareas } from "../../Auxiliares/auxiliar-bar";
 import { GanttEvent } from "../../types/tareas-gantt-actions";
 import { DateSetup } from "../../types/date-setup";
 import { HorizontalScroll } from "../other/horizontal-scroll";
@@ -27,7 +27,7 @@ import styles from "./gantt.module.css";
 export const Gantt: React.FunctionComponent<GanttProps> = ({
   tareas,
   headerHeight = 50,
-  columnWidth = 60,
+  anchoColumna = 60,
   listCellWidth = "155px",
   rowHeight = 50,
   ganttHeight = 0,
@@ -40,12 +40,12 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   barProgressSelectedColor = "#8282f5",
   barBackgroundColor = "#b8c2cc",
   barBackgroundSelectedColor = "#aeb8c2",
-  projectProgressColor = "#7db59a",
-  projectProgressSelectedColor = "#59a985",
-  projectBackgroundColor = "#fac465",
-  projectBackgroundSelectedColor = "#f7bb53",
-  milestoneBackgroundColor = "#f1c453",
-  milestoneBackgroundSelectedColor = "#f29e4c",
+  proyectoProgressColor = "#7db59a",
+  proyectoProgressSelectedColor = "#59a985",
+  proyectoBackgroundColor = "#fac465",
+  proyectoBackgroundSelectedColor = "#f7bb53",
+  hitoBackgroundColor = "#f1c453",
+  hitoBackgroundSelectedColor = "#f29e4c",
   rtl = false,
   handleWidth = 8,
   timeStep = 300000,
@@ -88,10 +88,10 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     [rowHeight, barFill]
   );
 
-  const [selectedTask, setTareaSeleccionada] = useState<BarraTareas>();
-  const [failedTask, setTareaFallida] = useState<BarraTareas | null>(null);
+  const [tareaSeleccionada, setTareaSeleccionada] = useState<BarraTareas>();
+  const [tareaFallida, setTareaFallida] = useState<BarraTareas | null>(null);
 
-  const svgWidth = dateSetup.dates.length * columnWidth;
+  const svgWidth = dateSetup.dates.length * anchoColumna;
   const ganttFullHeight = barraTareas.length * rowHeight;
 
   const [scrollY, setScrollY] = useState(0);
@@ -116,15 +116,15 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     if (rtl) {
       newDates = newDates.reverse();
       if (scrollX === -1) {
-        setScrollX(newDates.length * columnWidth);
+        setScrollX(newDates.length * anchoColumna);
       }
     }
     setDateSetup({ dates: newDates, viewMode });
     setBarraTareas(
-      convertirABarraTareas(
+      convertirABarrasTareas(
         tareasFiltradas,
         newDates,
-        columnWidth,
+        anchoColumna,
         rowHeight,
         altoTarea,
         barCornerRadius,
@@ -134,12 +134,12 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         barProgressSelectedColor,
         barBackgroundColor,
         barBackgroundSelectedColor,
-        projectProgressColor,
-        projectProgressSelectedColor,
-        projectBackgroundColor,
-        projectBackgroundSelectedColor,
-        milestoneBackgroundColor,
-        milestoneBackgroundSelectedColor
+        proyectoProgressColor,
+        proyectoProgressSelectedColor,
+        proyectoBackgroundColor,
+        proyectoBackgroundSelectedColor,
+        hitoBackgroundColor,
+        hitoBackgroundSelectedColor
       )
     );
   }, [
@@ -148,19 +148,19 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     preStepsCount,
     rowHeight,
     barCornerRadius,
-    columnWidth,
+    anchoColumna,
     altoTarea,
     handleWidth,
     barProgressColor,
     barProgressSelectedColor,
     barBackgroundColor,
     barBackgroundSelectedColor,
-    projectProgressColor,
-    projectProgressSelectedColor,
-    projectBackgroundColor,
-    projectBackgroundSelectedColor,
-    milestoneBackgroundColor,
-    milestoneBackgroundSelectedColor,
+    proyectoProgressColor,
+    proyectoProgressSelectedColor,
+    proyectoBackgroundColor,
+    proyectoBackgroundSelectedColor,
+    hitoBackgroundColor,
+    hitoBackgroundSelectedColor,
     rtl,
     scrollX,
     onExpanderClick,
@@ -183,11 +183,11 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         return;
       }
       setCurrentViewDate(viewDate);
-      setScrollX(columnWidth * index);
+      setScrollX(anchoColumna * index);
     }
   }, [
     viewDate,
-    columnWidth,
+    anchoColumna,
     dateSetup.dates,
     dateSetup.viewMode,
     viewMode,
@@ -207,29 +207,29 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         action === "inicio" ||
         action === "progreso"
       ) {
-        const prevStateTask = barraTareas.find(t => t.id === tareaCambiada.id);
+        const prevEstadoTarea = barraTareas.find(t => t.id === tareaCambiada.id);
         if (
-          prevStateTask &&
-          (prevStateTask.inicio.getTime() !== tareaCambiada.inicio.getTime() ||
-            prevStateTask.fin.getTime() !== tareaCambiada.fin.getTime() ||
-            prevStateTask.progreso !== tareaCambiada.progreso)
+          prevEstadoTarea &&
+          (prevEstadoTarea.inicio.getTime() !== tareaCambiada.inicio.getTime() ||
+            prevEstadoTarea.fin.getTime() !== tareaCambiada.fin.getTime() ||
+            prevEstadoTarea.progreso !== tareaCambiada.progreso)
         ) {
           // actions for change
-          const newTaskList = barraTareas.map(t =>
+          const nuevaListaTareas = barraTareas.map(t =>
             t.id === tareaCambiada.id ? tareaCambiada : t
           );
-          setBarraTareas(newTaskList);
+          setBarraTareas(nuevaListaTareas);
         }
       }
     }
   }, [ganttEvent, barraTareas]);
 
   useEffect(() => {
-    if (failedTask) {
-      setBarraTareas(barraTareas.map(t => (t.id !== failedTask.id ? t : failedTask)));
+    if (tareaFallida) {
+      setBarraTareas(barraTareas.map(t => (t.id !== tareaFallida.id ? t : tareaFallida)));
       setTareaFallida(null);
     }
-  }, [failedTask, barraTareas]);
+  }, [tareaFallida, barraTareas]);
 
   useEffect(() => {
     if (!listCellWidth) {
@@ -339,11 +339,11 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         break;
       case "Left":
       case "ArrowLeft":
-        newScrollX -= columnWidth;
+        newScrollX -= anchoColumna;
         break;
       case "Right": // Valor específico IE/Edge
       case "ArrowRight":
-        newScrollX += columnWidth;
+        newScrollX += anchoColumna;
         break;
     }
     if (isX) {
@@ -367,20 +367,20 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   /**
    * Evento selección de tarea
    */
-  const handleSelectedTask = (tareaId: string) => {
-    const newSelectedTask = barraTareas.find(t => t.id === tareaId);
-    const oldSelectedTask = barraTareas.find(
-      t => !!selectedTask && t.id === selectedTask.id
+  const handleTareaSeleccionada = (tareaId: string) => {
+    const nuevaTareaSeleccionada = barraTareas.find(t => t.id === tareaId);
+    const anteriorTareaSeleccionada = barraTareas.find(
+      t => !!tareaSeleccionada && t.id === tareaSeleccionada.id
     );
     if (onSelect) {
-      if (oldSelectedTask) {
-        onSelect(oldSelectedTask, false);
+      if (anteriorTareaSeleccionada) {
+        onSelect(anteriorTareaSeleccionada, false);
       }
-      if (newSelectedTask) {
-        onSelect(newSelectedTask, true);
+      if (nuevaTareaSeleccionada) {
+        onSelect(nuevaTareaSeleccionada, true);
       }
     }
-    setTareaSeleccionada(newSelectedTask);
+    setTareaSeleccionada(nuevaTareaSeleccionada);
   };
   const handleExpanderClick = (tarea: Tarea) => {
     if (onExpanderClick && tarea.hideChildren !== undefined) {
@@ -388,7 +388,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     }
   };
   const gridProps: GridProps = {
-    columnWidth,
+    anchoColumna,
     svgWidth,
     tareas: tareas,
     rowHeight,
@@ -401,7 +401,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     locale,
     viewMode,
     headerHeight,
-    columnWidth,
+    anchoColumna,
     fontFamily,
     fontSize,
     rtl,
@@ -410,10 +410,10 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     tareas: barraTareas,
     dates: dateSetup.dates,
     ganttEvent,
-    selectedTask,
+    tareaSeleccionada: tareaSeleccionada,
     rowHeight,
     altoTarea,
-    columnWidth,
+    anchoColumna,
     arrowColor,
     timeStep,
     fontFamily,
@@ -423,7 +423,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     rtl,
     setGanttEvent,
     setTareaFallida,
-    setTareaSeleccionada: handleSelectedTask,
+    setTareaSeleccionada: handleTareaSeleccionada,
     onDateChange,
     onProgressChange,
     onDoubleClick,
@@ -442,9 +442,9 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     scrollY,
     ganttHeight,
     horizontalContainerClass: styles.horizontalContainer,
-    selectedTask,
+    tareaSeleccionada,
     listaTareasRef,
-    setTareaSeleccionada: handleSelectedTask,
+    setTareaSeleccionada: handleTareaSeleccionada,
     onExpanderClick: handleExpanderClick,
     ListaTareasHeader,
     ListaTareasTable,

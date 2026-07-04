@@ -13,6 +13,6 @@ export type GanttContentMoveAction =
 
 export type GanttEvent = {
   tareaCambiada?: BarraTareas;
-  originalSelectedTask?: BarraTareas;
+  tareaOriginalSeleccionada?: BarraTareas;
   action: GanttContentMoveAction;
 };

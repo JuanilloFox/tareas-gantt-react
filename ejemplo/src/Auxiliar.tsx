@@ -1,6 +1,6 @@
 import { Tarea } from "tareas-gantt-react/dist/types/public-types";
 
-export function initTasks() {
+export function initTareas() {
   const currentDate = new Date();
   const tareas: Tarea[] = [
     {
@@ -79,7 +79,7 @@ export function initTasks() {
       nombre: "Liberar",
       id: "Tarea 6",
       progreso: currentDate.getMonth(),
-      tipo: "milestone",
+      tipo: "hito",
       dependencias: ["Tarea 4"],
       proyecto: "ProyectoEjemplo",
       displayOrder: 7,
@@ -97,7 +97,7 @@ export function initTasks() {
   return tareas;
 }
 
-export function getStartEndDateForProject(tareas: Tarea[], proyectoId: string) {
+export function getFechaInicioFinParaProyecto(tareas: Tarea[], proyectoId: string) {
   const tareasProyecto = tareas.filter(t => t.proyecto === proyectoId);
   let inicio = tareasProyecto[0].inicio;
   let fin = tareasProyecto[0].fin;

@@ -13,18 +13,18 @@ export function isMouseEvent(
   return (event as React.MouseEvent).clientX !== undefined;
 }
 
-export function isBarTask(tarea: Tarea | BarraTareas): tarea is BarraTareas {
+export function isBarraTareas(tarea: Tarea | BarraTareas): tarea is BarraTareas {
   return (tarea as BarraTareas).x1 !== undefined;
 }
 
 export function retirarTareasOcultas(tareas: Tarea[]) {
-  const groupedTasks = tareas.filter(
+  const tareasAgrupadas = tareas.filter(
     t => t.hideChildren && t.tipo === "proyecto"
   );
-  if (groupedTasks.length > 0) {
-    for (let i = 0; groupedTasks.length > i; i++) {
-      const groupedTask = groupedTasks[i];
-      const children = getChildren(tareas, groupedTask);
+  if (tareasAgrupadas.length > 0) {
+    for (let i = 0; tareasAgrupadas.length > i; i++) {
+      const tareaAgrupada = tareasAgrupadas[i];
+      const children = getChildren(tareas, tareaAgrupada);
       tareas = tareas.filter(t => children.indexOf(t) === -1);
     }
   }

@@ -28,11 +28,17 @@
   color: rgb(86 86 86);
   font-size: 0.6rem;
   padding: 0.15rem 0.2rem 0rem 0.2rem;
-  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer / Edge */
+  user-select: none;         /* Estándar moderno */
   cursor: pointer;
 }
 .listaTareasEmptyExpander {
   font-size: 0.6rem;
   padding-left: 1rem;
-  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer / Edge */
+  user-select: none;         /* Estándar moderno */
 }

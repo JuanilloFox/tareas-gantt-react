@@ -14,7 +14,7 @@ export type ListaTareasProps = {
   tareas: Tarea[];
   listaTareasRef: React.RefObject<HTMLDivElement>;
   horizontalContainerClass?: string;
-  selectedTask: BarraTareas | undefined;
+  tareaSeleccionada: BarraTareas | undefined;
   setTareaSeleccionada: (tarea: string) => void;
   onExpanderClick: (tarea: Tarea) => void;
   ListaTareasHeader: React.FC<{
@@ -44,7 +44,7 @@ export const ListaTareas: React.FC<ListaTareasProps> = ({
   rowHeight,
   scrollY,
   tareas,
-  selectedTask,
+  tareaSeleccionada,
   setTareaSeleccionada,
   onExpanderClick,
   locale,
@@ -67,7 +67,7 @@ export const ListaTareas: React.FC<ListaTareasProps> = ({
     fontSize,
     rowWidth,
   };
-  const tareaSeleccionadaId = selectedTask ? selectedTask.id : "";
+  const tareaSeleccionadaId = tareaSeleccionada ? tareaSeleccionada.id : "";
   const tableProps = {
     rowHeight,
     rowWidth,

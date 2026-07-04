@@ -3,7 +3,7 @@ import { BarraTareas } from "../../types/barra-tareas";
 import { GanttContentMoveAction } from "../../types/tareas-gantt-actions";
 import { Bar } from "./bar/bar";
 import { BarSmall } from "./bar/bar-small";
-import { Milestone } from "./hito/hito";
+import { Hito } from "./hito/hito";
 import { Proyecto } from "./proyecto/proyecto";
 import style from "./lista-tareas.module.css";
 
@@ -18,7 +18,7 @@ export type TareaItemProps = {
   rtl: boolean;
   onEventStart: (
     action: GanttContentMoveAction,
-    selectedTask: BarraTareas,
+    tareaSeleccionada: BarraTareas,
     event?: React.MouseEvent | React.KeyboardEvent
   ) => any;
 };
@@ -40,9 +40,9 @@ export const TareaItem: React.FC<TareaItemProps> = props => {
   const [isTextInside, setIsTextInside] = useState(true);
 
   useEffect(() => {
-    switch (tarea.typeInternal) {
-      case "milestone":
-        setItemTarea(<Milestone {...props} />);
+    switch (tarea.tipoInterno) {
+      case "hito":
+        setItemTarea(<Hito {...props} />);
         break;
       case "proyecto":
         setItemTarea(<Proyecto {...props} />);
