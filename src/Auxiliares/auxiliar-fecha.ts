@@ -91,32 +91,32 @@ export const ganttDateRange = (
   }
 
   switch (viewMode) {
-    case ViewMode.Year:
+    case ViewMode.Ano:
       nuevaFechaInicio = startOfDate(agregarAFecha(nuevaFechaInicio, -1, "year"), "year");
       nuevaFechaFin = startOfDate(agregarAFecha(nuevaFechaFin, 1, "year"), "year");
       break;
-    case ViewMode.QuarterYear:
+    case ViewMode.CuartoAno:
       nuevaFechaInicio = startOfDate(agregarAFecha(nuevaFechaInicio, -3, "month"), "month");
       nuevaFechaFin = startOfDate(agregarAFecha(nuevaFechaFin, 3, "year"), "year");
       break;
-    case ViewMode.Month:
+    case ViewMode.Mes:
       nuevaFechaInicio = startOfDate(agregarAFecha(nuevaFechaInicio, -1 * preStepsCount, "month"), "month");
       nuevaFechaFin = startOfDate(agregarAFecha(nuevaFechaFin, 1, "year"), "year");
       break;
-    case ViewMode.Week:
+    case ViewMode.Semana:
       nuevaFechaInicio = startOfDate(nuevaFechaInicio, "day");
       nuevaFechaInicio = agregarAFecha(getMonday(nuevaFechaInicio), -7 * preStepsCount, "day");
       nuevaFechaFin = agregarAFecha(startOfDate(nuevaFechaFin, "day"), 1.5, "month");
       break;
-    case ViewMode.Day:
+    case ViewMode.Dia:
       nuevaFechaInicio = agregarAFecha(startOfDate(nuevaFechaInicio, "day"), -1 * preStepsCount, "day");
       nuevaFechaFin = agregarAFecha(startOfDate(nuevaFechaFin, "day"), 19, "day");
       break;
-    case ViewMode.QuarterDay:
+    case ViewMode.Cuarto:
       nuevaFechaInicio = agregarAFecha(startOfDate(nuevaFechaInicio, "day"), -1 * preStepsCount, "day");
       nuevaFechaFin = agregarAFecha(startOfDate(nuevaFechaFin, "day"), 66, "hora");
       break;
-    case ViewMode.HalfDay:
+    case ViewMode.Medio:
       nuevaFechaInicio = agregarAFecha(startOfDate(nuevaFechaInicio, "day"), -1 * preStepsCount, "day");
       nuevaFechaFin = agregarAFecha(startOfDate(nuevaFechaFin, "day"), 108, "hora");
       break;
@@ -138,25 +138,25 @@ export const semillaFechas = (
 
   while (fechaActual < fechaFin) {
     switch (viewMode) {
-      case ViewMode.Year:
+      case ViewMode.Ano:
         fechaActual = agregarAFecha(fechaActual, 1, "year");
         break;
-      case ViewMode.QuarterYear:
+      case ViewMode.CuartoAno:
         fechaActual = agregarAFecha(fechaActual, 3, "month");
         break;
-      case ViewMode.Month:
+      case ViewMode.Mes:
         fechaActual = agregarAFecha(fechaActual, 1, "month");
         break;
-      case ViewMode.Week:
+      case ViewMode.Semana:
         fechaActual = agregarAFecha(fechaActual, 7, "day");
         break;
-      case ViewMode.Day:
+      case ViewMode.Dia:
         fechaActual = agregarAFecha(fechaActual, 1, "day");
         break;
-      case ViewMode.HalfDay:
+      case ViewMode.Medio:
         fechaActual = agregarAFecha(fechaActual, 12, "hora");
         break;
-      case ViewMode.QuarterDay:
+      case ViewMode.Cuarto:
         fechaActual = agregarAFecha(fechaActual, 6, "hora");
         break;
       case ViewMode.Hora:

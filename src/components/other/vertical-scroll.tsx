@@ -4,14 +4,14 @@ import styles from "./vertical-scroll.module.css";
 
 export const VerticalScroll: React.FC<{
   scroll: number;
-  ganttHeight: number;
+  altoGantt: number;
   ganttFullHeight: number;
   altoCabecera: number;
   rtl: boolean;
   onScroll: (event: SyntheticEvent<HTMLDivElement>) => void;
 }> = ({
   scroll,
-  ganttHeight,
+  altoGantt,
   ganttFullHeight,
   altoCabecera,
   rtl,
@@ -28,7 +28,7 @@ export const VerticalScroll: React.FC<{
   return (
     <div
       style={{
-        height: ganttHeight,
+        height: altoGantt,
         marginTop: altoCabecera,
         marginLeft: rtl ? "" : "-1rem",
       }}
@@ -47,7 +47,7 @@ import styles from "./vertical-scroll.module.css";
 
 interface VerticalScrollProps {
   scroll: number;
-  alturaGantt: number;
+  altoGantt: number;
   ganttFullHeight: number;
   altoCabecera: number;
   rtl: boolean;
@@ -56,7 +56,7 @@ interface VerticalScrollProps {
 
 export const VerticalScroll: React.FC<VerticalScrollProps> = ({
   scroll,
-  alturaGantt,
+  altoGantt,
   ganttFullHeight,
   altoCabecera,
   rtl,
@@ -73,7 +73,7 @@ export const VerticalScroll: React.FC<VerticalScrollProps> = ({
   }, [scroll]);
 
   const containerStyle: React.CSSProperties = {
-    height: alturaGantt,
+    height: altoGantt,
     marginTop: altoCabecera,
     marginLeft: rtl ? undefined : "-1rem",
   };

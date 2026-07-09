@@ -1,13 +1,13 @@
 export enum ViewMode {
   Hora = "Hora",
-  QuarterDay = "Cuarto de Día",
-  HalfDay = "Medio Día",
-  Day = "Día",
+  Cuarto = "Cuarto de Día",
+  Medio = "Medio Día",
+  Dia = "Día",
   /** ISO-8601 week */
-  Week = "Semana",
-  Month = "Mes",
-  QuarterYear = "Cuarto de Año",
-  Year = "Año",
+  Semana = "Semana",
+  Mes = "Mes",
+  CuartoAno = "Cuarto de Año",
+  Ano = "Año",
 }
 export type TipoTarea = "tarea" | "hito" | "proyecto";
 export interface Tarea {
@@ -37,7 +37,7 @@ export interface EventOption {
   /**
    * Valor del intervalo de tiempo para los cambios de fecha.
    */
-  timeStep?: number;
+  intervaloTiempo?: number;
   /**
    * Se activa al seleccionar o deseleccionar la barra.
    */
@@ -91,11 +91,11 @@ export interface DisplayOption {
 export interface StylingOption {
   altoCabecera?: number;
   anchoColumna?: number;
-  listCellWidth?: string;
+  anchoCeldaLista ?: string;
   altoFila?: number;
-  alturaGantt?: number;
+  altoGantt?: number;
   barCornerRadius?: number;
-  handleWidth?: number;
+  anchoCanal?: number;
   fontFamily?: string;
   fontSize?: string;
   /**

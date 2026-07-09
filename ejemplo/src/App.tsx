@@ -3,18 +3,19 @@ import { Tarea, ViewMode, Gantt } from "tareas-gantt-react";
 import { ViewSwitcher } from "./components/view-switcher";
 import { getFechaInicioFinParaProyecto, initTareas } from "./Auxiliar";
 import "tareas-gantt-react/dist/index.css";
+//import "dist/index.css";
 
 // Init
 const App = () => {
-  const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
+  const [view, setView] = React.useState<ViewMode>(ViewMode.Dia);
   const [tareas, setTareas] = React.useState<Tarea[]>(initTareas());
   const [isChecked, setIsChecked] = React.useState(true);
   let anchoColumna = 65;
-  if (view === ViewMode.Year) {
+  if (view === ViewMode.Ano) {
     anchoColumna = 350;
-  } else if (view === ViewMode.Month) {
+  } else if (view === ViewMode.Mes) {
     anchoColumna = 300;
-  } else if (view === ViewMode.Week) {
+  } else if (view === ViewMode.Semana) {
     anchoColumna = 250;
   }
 
@@ -85,7 +86,7 @@ const App = () => {
         onClick={handleClick}
         onSelect={handleSelect}
         onExpanderClick={handleExpanderClick}
-        listCellWidth={isChecked ? "155px" : ""}
+        anchoCeldaLista={isChecked ? "155px" : ""}
         anchoColumna={anchoColumna}
       />
       <h3>Gantt con altura limitada</h3>
@@ -99,8 +100,8 @@ const App = () => {
         onClick={handleClick}
         onSelect={handleSelect}
         onExpanderClick={handleExpanderClick}
-        listCellWidth={isChecked ? "155px" : ""}
-        ganttHeight={300}
+        anchoCeldaLista={isChecked ? "155px" : ""}
+        altoGantt={300}
         anchoColumna={anchoColumna}
       />
     </div>

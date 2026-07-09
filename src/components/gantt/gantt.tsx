@@ -18,7 +18,7 @@ import { ListaTareasProps, ListaTareas } from "../lista-tareas/lista-tareas";
 import { TareaGantt } from "./tarea-gantt";
 import { BarraTareas } from "../../types/barra-tareas";
 import { convertirABarrasTareas } from "../../Auxiliares/auxiliar-bar";
-import { GanttEvent } from "../../types/tareas-gantt-actions";
+import { EventoGantt } from "../../types/tareas-gantt-actions";
 import { ConfigFecha } from "../../types/date-setup";
 import { HorizontalScroll } from "../other/horizontal-scroll";
 import { retirarTareasOcultas, ordenarTareas } from "../../Auxiliares/otros-auxiliares";
@@ -28,10 +28,10 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   tareas,
   altoCabecera = 50,
   anchoColumna = 60,
-  listCellWidth = "155px",
+  anchoCeldaLista = "155px",
   altoFila = 50,
-  alturaGantt = 0,
-  viewMode = ViewMode.Day,
+  altoGantt = 0,
+  viewMode = ViewMode.Dia,
   preStepsCount = 1,
   locale = "es-ES",
   barFill = 60,
@@ -47,8 +47,8 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   hitoBackgroundColor = "#f1c453",
   hitoBackgroundSelectedColor = "#f29e4c",
   rtl = false,
-  handleWidth = 8,
-  timeStep = 300000,
+  anchoCanal = 8,
+  intervaloTiempo = 300000,
   arrowColor = "grey",
   fontFamily = "Arial, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue",
   fontSize = "14px",
@@ -78,9 +78,9 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
 
   const [anchoListaTareas, setAnchoListaTareas] = useState(0);
   const [svgContainerWidth, setSvgContainerWidth] = useState(0);
-  const [svgContainerHeight, setSvgContainerHeight] = useState(alturaGantt);
+  const [svgContainerHeight, setSvgContainerHeight] = useState(altoGantt);
   const [barraTareas, setBarraTareas] = useState<BarraTareas[]>([]);
-  const [ganttEvent, setGanttEvent] = useState<GanttEvent>({
+  const [eventoGantt, setEventoGantt] = useState<EventoGantt>({
     action: "",
   });
   const altoTarea = useMemo(
@@ -128,7 +128,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         altoFila,
         altoTarea,
         barCornerRadius,
-        handleWidth,
+        anchoCanal,
         rtl,
         barProgressColor,
         barProgressSelectedColor,
@@ -150,7 +150,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     barCornerRadius,
     anchoColumna,
     altoTarea,
-    handleWidth,
+    anchoCanal,
     barProgressColor,
     barProgressSelectedColor,
     barBackgroundColor,
@@ -196,10 +196,10 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   ]);
 
   useEffect(() => {
-    const { tareaCambiada, action } = ganttEvent;
+    const { tareaCambiada, action } = eventoGantt;
     if (tareaCambiada) {
       if (action === "delete") {
-        setGanttEvent({ action: "" });
+        setEventoGantt({ action: "" });
         setBarraTareas(barraTareas.filter(t => t.id !== tareaCambiada.id));
       } else if (
         action === "mover" ||
@@ -222,7 +222,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         }
       }
     }
-  }, [ganttEvent, barraTareas]);
+  }, [eventoGantt, barraTareas]);
 
   useEffect(() => {
     if (tareaFallida) {
@@ -232,13 +232,13 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   }, [tareaFallida, barraTareas]);
 
   useEffect(() => {
-    if (!listCellWidth) {
+    if (!anchoCeldaLista) {
       setAnchoListaTareas(0);
     }
     if (listaTareasRef.current) {
       setAnchoListaTareas(listaTareasRef.current.offsetWidth);
     }
-  }, [listaTareasRef, listCellWidth]);
+  }, [listaTareasRef, anchoCeldaLista]);
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -247,12 +247,12 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   }, [wrapperRef, anchoListaTareas]);
 
   useEffect(() => {
-    if (alturaGantt) {
-      setSvgContainerHeight(alturaGantt + altoCabecera);
+    if (altoGantt) {
+      setSvgContainerHeight(altoGantt + altoCabecera);
     } else {
       setSvgContainerHeight(tareas.length * altoFila + altoCabecera);
     }
-  }, [alturaGantt, tareas, altoCabecera, altoFila]);
+  }, [altoGantt, tareas, altoCabecera, altoFila]);
 
   // scroll events
   useEffect(() => {
@@ -267,12 +267,12 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         }
         setScrollX(newScrollX);
         event.preventDefault();
-      } else if (alturaGantt) {
+      } else if (altoGantt) {
         let newScrollY = scrollY + event.deltaY;
         if (newScrollY < 0) {
           newScrollY = 0;
-        } else if (newScrollY > ganttFullHeight - alturaGantt) {
-          newScrollY = ganttFullHeight - alturaGantt;
+        } else if (newScrollY > ganttFullHeight - altoGantt) {
+          newScrollY = ganttFullHeight - altoGantt;
         }
         if (newScrollY !== scrollY) {
           setScrollY(newScrollY);
@@ -294,7 +294,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     wrapperRef,
     scrollY,
     scrollX,
-    alturaGantt,
+    altoGantt,
     svgWidth,
     rtl,
     ganttFullHeight,
@@ -356,8 +356,8 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     } else {
       if (newScrollY < 0) {
         newScrollY = 0;
-      } else if (newScrollY > ganttFullHeight - alturaGantt) {
-        newScrollY = ganttFullHeight - alturaGantt;
+      } else if (newScrollY > ganttFullHeight - altoGantt) {
+        newScrollY = ganttFullHeight - altoGantt;
       }
       setScrollY(newScrollY);
     }
@@ -409,19 +409,19 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   const barProps: TareaGanttContentProps = {
     tareas: barraTareas,
     fechas: configFecha.fechas,
-    ganttEvent,
+    eventoGantt,
     tareaSeleccionada: tareaSeleccionada,
     altoFila,
     altoTarea,
     anchoColumna,
     arrowColor,
-    timeStep,
+    intervaloTiempo,
     fontFamily,
     fontSize,
     arrowIndent,
     svgWidth,
     rtl,
-    setGanttEvent,
+    setEventoGantt,
     setTareaFallida,
     setTareaSeleccionada: handleTareaSeleccionada,
     onDateChange,
@@ -433,14 +433,14 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
 
   const tablaProps: ListaTareasProps = {
     altoFila,
-    anchoFila: listCellWidth,
+    anchoFila: anchoCeldaLista,
     fontFamily,
     fontSize,
     tareas: barraTareas,
     locale,
     altoCabecera,
     scrollY,
-    alturaGantt,
+    altoGantt,
     horizontalContainerClass: styles.horizontalContainer,
     tareaSeleccionada,
     listaTareasRef,
@@ -457,16 +457,16 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         tabIndex={0}
         ref={wrapperRef}
       >
-        {listCellWidth && <ListaTareas {...tablaProps} />}
+        {anchoCeldaLista && <ListaTareas {...tablaProps} />}
         <TareaGantt
           gridProps={gridProps}
           calendarProps={calendarProps}
           barProps={barProps}
-          alturaGantt={alturaGantt}
+          altoGantt={altoGantt}
           scrollY={scrollY}
           scrollX={scrollX}
         />
-        {ganttEvent.tareaCambiada && (
+        {eventoGantt.tareaCambiada && (
           <Tooltip
             arrowIndent={arrowIndent}
             altoFila={altoFila}
@@ -476,7 +476,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
             fontSize={fontSize}
             scrollX={scrollX}
             scrollY={scrollY}
-            tarea={ganttEvent.tareaCambiada}
+            tarea={eventoGantt.tareaCambiada}
             altoCabecera={altoCabecera}
             anchoListaTareas={anchoListaTareas}
             TooltipContent={TooltipContent}
@@ -486,7 +486,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
         )}
         <VerticalScroll
           ganttFullHeight={ganttFullHeight}
-          alturaGantt={alturaGantt}
+          altoGantt={altoGantt}
           altoCabecera={altoCabecera}
           scroll={scrollY}
           onScroll={handleScrollY}

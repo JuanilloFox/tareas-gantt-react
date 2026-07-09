@@ -8,17 +8,17 @@ import { TareaItem } from "../tarea-item/tarea-item";
 import {
   BarMoveAction,
   GanttContentMoveAction,
-  GanttEvent,
+  EventoGantt,
 } from "../../types/tareas-gantt-actions";
 
 export type TareaGanttContentProps = {
   tareas: BarraTareas[];
   fechas: Date[];
-  ganttEvent: GanttEvent;
+  eventoGantt: EventoGantt;
   tareaSeleccionada: BarraTareas | undefined;
   altoFila: number;
   anchoColumna: number;
-  timeStep: number;
+  intervaloTiempo: number;
   svg?: React.RefObject<SVGSVGElement>;
   svgWidth: number;
   altoTarea: number;
@@ -27,7 +27,7 @@ export type TareaGanttContentProps = {
   fontSize: string;
   fontFamily: string;
   rtl: boolean;
-  setGanttEvent: (value: GanttEvent) => void;
+  setEventoGantt: (value: EventoGantt) => void;
   setTareaFallida: (value: BarraTareas | null) => void;
   setTareaSeleccionada: (tareaId: string) => void;
 } & EventOption;
@@ -35,11 +35,11 @@ export type TareaGanttContentProps = {
 export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
   tareas,
   fechas,
-  ganttEvent,
+  eventoGantt,
   tareaSeleccionada,
   altoFila,
   anchoColumna,
-  timeStep,
+  intervaloTiempo,
   svg,
   altoTarea,
   arrowColor,
@@ -47,7 +47,7 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
   fontFamily,
   fontSize,
   rtl,
-  setGanttEvent,
+  setEventoGantt,
   setTareaFallida,
   setTareaSeleccionada,
   onDateChange,
@@ -68,13 +68,13 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
       fechas[0].getTime() -
       fechas[1].getTimezoneOffset() * 60 * 1000 +
       fechas[0].getTimezoneOffset() * 60 * 1000;
-    const newXStep = (timeStep * anchoColumna) / dateDelta;
+    const newXStep = (intervaloTiempo * anchoColumna) / dateDelta;
     setXStep(newXStep);
-  }, [anchoColumna, fechas, timeStep]);
+  }, [anchoColumna, fechas, intervaloTiempo]);
 
   useEffect(() => {
     const handleMouseMove = async (event: MouseEvent) => {
-      if (!ganttEvent.tareaCambiada || !point || !svg?.current) return;
+      if (!eventoGantt.tareaCambiada || !point || !svg?.current) return;
       event.preventDefault();
 
       point.x = event.clientX;
@@ -84,20 +84,20 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
 
       const { isChanged, tareaCambiada } = handleTareaPorEventoRatonSVG(
         cursor.x,
-        ganttEvent.action as BarMoveAction,
-        ganttEvent.tareaCambiada,
+        eventoGantt.action as BarMoveAction,
+        eventoGantt.tareaCambiada,
         xStep,
-        timeStep,
+        intervaloTiempo,
         initEventX1Delta,
         rtl
       );
       if (isChanged) {
-        setGanttEvent({ action: ganttEvent.action, tareaCambiada });
+        setEventoGantt({ action: eventoGantt.action, tareaCambiada });
       }
     };
 
     const handleMouseUp = async (event: MouseEvent) => {
-      const { action, tareaOriginalSeleccionada, tareaCambiada } = ganttEvent;
+      const { action, tareaOriginalSeleccionada, tareaCambiada } = eventoGantt;
       if (!tareaCambiada || !point || !svg?.current || !tareaOriginalSeleccionada)
         return;
       event.preventDefault();
@@ -111,7 +111,7 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
         action as BarMoveAction,
         tareaCambiada,
         xStep,
-        timeStep,
+        intervaloTiempo,
         initEventX1Delta,
         rtl
       );
@@ -124,7 +124,7 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
       // remove listeners
       svg.current.removeEventListener("mousemove", handleMouseMove);
       svg.current.removeEventListener("mouseup", handleMouseUp);
-      setGanttEvent({ action: "" });
+      setEventoGantt({ action: "" });
       setIsMoving(false);
 
       // custom operation start
@@ -167,10 +167,10 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
 
     if (
       !isMoving &&
-      (ganttEvent.action === "mover" ||
-        ganttEvent.action === "fin" ||
-        ganttEvent.action === "inicio" ||
-        ganttEvent.action === "progreso") &&
+      (eventoGantt.action === "mover" ||
+        eventoGantt.action === "fin" ||
+        eventoGantt.action === "inicio" ||
+        eventoGantt.action === "progreso") &&
       svg?.current
     ) {
       svg.current.addEventListener("mousemove", handleMouseMove);
@@ -178,18 +178,18 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
       setIsMoving(true);
     }
   }, [
-    ganttEvent,
+    eventoGantt,
     xStep,
     initEventX1Delta,
     onProgressChange,
-    timeStep,
+    intervaloTiempo,
     onDateChange,
     svg,
     isMoving,
     point,
     rtl,
     setTareaFallida,
-    setGanttEvent,
+    setEventoGantt,
   ]);
 
   /**
@@ -212,7 +212,7 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
           try {
             const result = await onDelete(tarea);
             if (result !== undefined && result) {
-              setGanttEvent({ action, tareaCambiada: tarea });
+              setEventoGantt({ action, tareaCambiada: tarea });
             }
           } catch (error) {
             console.error("Error on Delete. " + error);
@@ -222,16 +222,16 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
     }
     // Mouse Events
     else if (action === "mouseenter") {
-      if (!ganttEvent.action) {
-        setGanttEvent({
+      if (!eventoGantt.action) {
+        setEventoGantt({
           action,
           tareaCambiada: tarea,
           tareaOriginalSeleccionada: tarea,
         });
       }
     } else if (action === "mouseleave") {
-      if (ganttEvent.action === "mouseenter") {
-        setGanttEvent({ action: "" });
+      if (eventoGantt.action === "mouseenter") {
+        setEventoGantt({ action: "" });
       }
     } else if (action === "dblclick") {
       !!onDoubleClick && onDoubleClick(tarea);
@@ -246,13 +246,13 @@ export const TareaGanttContent: React.FC<TareaGanttContentProps> = ({
         svg.current.getScreenCTM()?.inverse()
       );
       setInitEventX1Delta(cursor.x - tarea.x1);
-      setGanttEvent({
+      setEventoGantt({
         action,
         tareaCambiada: tarea,
         tareaOriginalSeleccionada: tarea,
       });
     } else {
-      setGanttEvent({
+      setEventoGantt({
         action,
         tareaCambiada: tarea,
         tareaOriginalSeleccionada: tarea,

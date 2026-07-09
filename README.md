@@ -89,7 +89,7 @@ npm start
 |                      | Promise<boolean>                 |                                                            |
 | onExpanderClick\*    | onExpanderClick: (tarea: Tarea)  | Especifica la función que se ejecutará al hacer clic       |
 |                      | => void;                         | en el expansor de tabla.                                   |
-| timeStep             | number                           | Valor del intervalo de tiempo para onDateChange.           |
+| intervaloTiempo      | number                           | Valor del intervalo de tiempo para onDateChange.          |
 |                      |                                  | Especifique en milisegundos.                               |
 
 \* El gráfico deshace la operación si el método devuelve falso o error. El parámetro 'hijos' devuelve registros de un nivel de profundidad.
@@ -111,16 +111,16 @@ npm start
 | Nombre del parámetro       | Tipo   | Descripción                                                                 |
 | :------------------------- | :----- | :-------------------------------------------------------------------------- |
 | altoCabecera               | number | Especifica la altura del encabezado.                                        |
-| alturaGantt                | number | Especifica la altura del diagrama de Gantt sin encabezado. El valor         |
+| altoGantt                | number | Especifica la altura del diagrama de Gantt sin encabezado. El valor         |
 |                            |        | predeterminado es 0. Esto significa que no hay limitación de altura.        |
 | anchoColumna               | number | Especifica la duración del período de tiempo.                               |
-| listCellWidth              | string | Especifica el ancho de la celda de la lista de tareas. Una cadena vacía     |
+| anchoCeldaLista              | string | Especifica el ancho de la celda de la lista de tareas. Una cadena vacía     |
 |                            |        | significa "no mostrar".                                                     |
 | altoFila                   | number | Especifica la altura de la fila de tareas.                                  |
 | barCornerRadius            | number | Especifica el redondeo de las esquinas de la barra de tareas.               |
 | barFill                    | number | Especifica la ocupación de la barra de tareas. Se establece en porcentaje   |
 |                            |        | de 0 a 100.                                                                 |
-| handleWidth                | number | Especifica el ancho del control de eventos de arrastre de la barra de       |
+| anchoCanal                | number | Especifica el ancho del control de eventos de arrastre de la barra de       |
 |                            |        | tareas para las fechas de inicio y fin.                                     |
 | fontFamily                 | string | Especifica la fuente de la aplicación.                                      |
 | fontSize                   | string | Especifica el tamaño de fuente de la aplicación.                            |

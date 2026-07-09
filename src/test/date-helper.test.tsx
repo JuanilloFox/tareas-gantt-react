@@ -6,9 +6,9 @@ import {
 import { ViewMode } from "../types/public-types";
 
 describe("semilla fecha", () => {
-  test("daily", () => {
+  test("diario", () => {
     expect(
-      semillaFechas(new Date(2020, 5, 28), new Date(2020, 6, 2), ViewMode.Day)
+      semillaFechas(new Date(2020, 5, 28), new Date(2020, 6, 2), ViewMode.Dia)
     ).toEqual([
       new Date(2020, 5, 28),
       new Date(2020, 5, 29),
@@ -18,9 +18,9 @@ describe("semilla fecha", () => {
     ]);
   });
 
-  test("weekly", () => {
+  test("semanal", () => {
     expect(
-      semillaFechas(new Date(2020, 5, 28), new Date(2020, 6, 19), ViewMode.Week)
+      semillaFechas(new Date(2020, 5, 28), new Date(2020, 6, 19), ViewMode.Semana)
     ).toEqual([
       new Date(2020, 5, 28),
       new Date(2020, 6, 5),
@@ -29,18 +29,18 @@ describe("semilla fecha", () => {
     ]);
   });
 
-  test("monthly", () => {
+  test("mensual", () => {
     expect(
-      semillaFechas(new Date(2020, 5, 28), new Date(2020, 6, 19), ViewMode.Month)
+      semillaFechas(new Date(2020, 5, 28), new Date(2020, 6, 19), ViewMode.Mes)
     ).toEqual([new Date(2020, 5, 28), new Date(2020, 6, 28)]);
   });
 
-  test("quarterly", () => {
+  test("cuarto de día", () => {
     expect(
       semillaFechas(
         new Date(2020, 5, 28),
         new Date(2020, 5, 29),
-        ViewMode.QuarterDay
+        ViewMode.Cuarto
       )
     ).toEqual([
       new Date(2020, 5, 28, 0, 0),
@@ -52,14 +52,14 @@ describe("semilla fecha", () => {
   });
 });
 
-describe("add to date", () => {
-  test("add month", () => {
+describe("agregar a fecha", () => {
+  test("agregar mes", () => {
     expect(agregarAFecha(new Date(2020, 0, 1), 40, "month")).toEqual(
       new Date(2023, 4, 1)
     );
   });
 
-  test("add day", () => {
+  test("agregar día", () => {
     expect(agregarAFecha(new Date(2020, 0, 1), 40, "day")).toEqual(
       new Date(2020, 1, 10)
     );

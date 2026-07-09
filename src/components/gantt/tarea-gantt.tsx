@@ -8,7 +8,7 @@ export type TareaGanttProps = {
   gridProps: GridProps;
   calendarProps: CalendarProps;
   barProps: TareaGanttContentProps;
-  alturaGantt: number;
+  altoGantt: number;
   scrollY: number;
   scrollX: number;
 };
@@ -16,7 +16,7 @@ export const TareaGantt: React.FC<TareaGanttProps> = ({
   gridProps,
   calendarProps,
   barProps,
-  alturaGantt,
+  altoGantt,
   scrollY,
   scrollX,
 }) => {
@@ -55,8 +55,8 @@ export const TareaGantt: React.FC<TareaGanttProps> = ({
         ref={horizontalContainerRef}
         className={styles.horizontalContainer}
         style={
-          alturaGantt
-            ? { height: alturaGantt, width: gridProps.svgWidth }
+          altoGantt
+            ? { height: altoGantt, width: gridProps.svgWidth }
             : { width: gridProps.svgWidth }
         }
       >

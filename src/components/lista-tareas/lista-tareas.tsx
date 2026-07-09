@@ -8,7 +8,7 @@ export type ListaTareasProps = {
   fontFamily: string;
   fontSize: string;
   altoFila: number;
-  alturaGantt: number;
+  altoGantt: number;
   scrollY: number;
   locale: string;
   tareas: Tarea[];
@@ -48,7 +48,7 @@ export const ListaTareas: React.FC<ListaTareasProps> = ({
   setTareaSeleccionada,
   onExpanderClick,
   locale,
-  alturaGantt,
+  altoGantt,
   listaTareasRef,
   horizontalContainerClass,
   CabeceraListaTareas,
@@ -86,7 +86,7 @@ export const ListaTareas: React.FC<ListaTareasProps> = ({
       <div
         ref={horizontalContainerRef}
         className={horizontalContainerClass}
-        style={alturaGantt ? { height: alturaGantt } : {}}
+        style={altoGantt ? { height: altoGantt } : {}}
       >
         <TablaListaTareas {...tablaProps} />
       </div>

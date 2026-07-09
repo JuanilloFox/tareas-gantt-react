@@ -43,7 +43,7 @@ export const Bar: React.FC<TareaItemProps> = ({
             <BarDateHandle
               x={tarea.x1 + 1}
               y={tarea.y + 1}
-              width={tarea.handleWidth}
+              width={tarea.anchoCanal}
               height={handleHeight}
               barCornerRadius={tarea.barCornerRadius}
               onMouseDown={e => {
@@ -52,9 +52,9 @@ export const Bar: React.FC<TareaItemProps> = ({
             />
             {/* right */}
             <BarDateHandle
-              x={tarea.x2 - tarea.handleWidth - 1}
+              x={tarea.x2 - tarea.anchoCanal - 1}
               y={tarea.y + 1}
-              width={tarea.handleWidth}
+              width={tarea.anchoCanal}
               height={handleHeight}
               barCornerRadius={tarea.barCornerRadius}
               onMouseDown={e => {

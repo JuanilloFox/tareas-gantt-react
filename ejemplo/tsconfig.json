@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "module": "esnext",
+    "module": "nodenext",
     "lib": [
       "dom",
       "dom.Iterable",
       "esnext"
     ],
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext",
     "jsx": "react",
     "sourceMap": true,
     "declaration": true,

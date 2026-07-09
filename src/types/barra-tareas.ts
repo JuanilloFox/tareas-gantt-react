@@ -10,7 +10,7 @@ export interface BarraTareas extends Tarea {
   progresoX: number;
   anchoProgreso: number;
   barCornerRadius: number;
-  handleWidth: number;
+  anchoCanal: number;
   barraHijos: BarraTareas[];
   styles: {
     backgroundColor: string;

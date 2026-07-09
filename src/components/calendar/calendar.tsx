@@ -265,7 +265,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   const getCalendarValuesForPartOfDay = () => {
     const topValues: ReactChild[] = [];
     const bottomValues: ReactChild[] = [];
-    const ticks = viewMode === ViewMode.HalfDay ? 2 : 4;
+    const ticks = viewMode === ViewMode.Medio ? 2 : 4;
     const topDefaultHeight = altoCabecera * 0.5;
     const fechas = configFecha.fechas;
     for (let i = 0; i < fechas.length; i++) {
@@ -358,23 +358,23 @@ export const Calendar: React.FC<CalendarProps> = ({
   let topValues: ReactChild[] = [];
   let bottomValues: ReactChild[] = [];
   switch (configFecha.viewMode) {
-    case ViewMode.Year:
+    case ViewMode.Ano:
       [topValues, bottomValues] = getCalendarValuesForYear();
       break;
-    case ViewMode.QuarterYear:
+    case ViewMode.CuartoAno:
       [topValues, bottomValues] = getCalendarValuesForQuarterYear();
       break;
-    case ViewMode.Month:
+    case ViewMode.Mes:
       [topValues, bottomValues] = getCalendarValuesForMonth();
       break;
-    case ViewMode.Week:
+    case ViewMode.Semana:
       [topValues, bottomValues] = getCalendarValuesForWeek();
       break;
-    case ViewMode.Day:
+    case ViewMode.Dia:
       [topValues, bottomValues] = getCalendarValuesForDay();
       break;
-    case ViewMode.QuarterDay:
-    case ViewMode.HalfDay:
+    case ViewMode.Cuarto:
+    case ViewMode.Medio:
       [topValues, bottomValues] = getCalendarValuesForPartOfDay();
       break;
     case ViewMode.Hora:

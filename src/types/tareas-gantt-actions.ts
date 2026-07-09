@@ -11,7 +11,7 @@ export type GanttContentMoveAction =
   | ""
   | BarMoveAction;
 
-export type GanttEvent = {
+export type EventoGantt = {
   tareaCambiada?: BarraTareas;
   tareaOriginalSeleccionada?: BarraTareas;
   action: GanttContentMoveAction;

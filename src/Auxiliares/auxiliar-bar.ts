@@ -9,7 +9,7 @@ export const convertirABarrasTareas = (
   altoFila: number,
   altoTarea: number,
   barCornerRadius: number,
-  handleWidth: number,
+  anchoCanal: number,
   rtl: boolean,
   barProgressColor: string,
   barProgressSelectedColor: string,
@@ -31,7 +31,7 @@ export const convertirABarrasTareas = (
       altoFila,
       altoTarea,
       barCornerRadius,
-      handleWidth,
+      anchoCanal,
       rtl,
       barProgressColor,
       barProgressSelectedColor,
@@ -69,7 +69,7 @@ const convertirABarraTareas = (
   altoFila: number,
   altoTarea: number,
   barCornerRadius: number,
-  handleWidth: number,
+  anchoCanal: number,
   rtl: boolean,
   barProgressColor: string,
   barProgressSelectedColor: string,
@@ -93,7 +93,7 @@ const convertirABarraTareas = (
         altoFila,
         altoTarea,
         barCornerRadius,
-        handleWidth,
+        anchoCanal,
         hitoBackgroundColor,
         hitoBackgroundSelectedColor
       );
@@ -107,7 +107,7 @@ const convertirABarraTareas = (
         altoFila,
         altoTarea,
         barCornerRadius,
-        handleWidth,
+        anchoCanal,
         rtl,
         proyectoProgressColor,
         proyectoProgressSelectedColor,
@@ -124,7 +124,7 @@ const convertirABarraTareas = (
         altoFila,
         altoTarea,
         barCornerRadius,
-        handleWidth,
+        anchoCanal,
         rtl,
         barProgressColor,
         barProgressSelectedColor,
@@ -144,7 +144,7 @@ const convertToBar = (
   altoFila: number,
   altoTarea: number,
   barCornerRadius: number,
-  handleWidth: number,
+  anchoCanal: number,
   rtl: boolean,
   barProgressColor: string,
   barProgressSelectedColor: string,
@@ -161,9 +161,9 @@ const convertToBar = (
     x2 = CoordenadaXTarea(tarea.fin, fechas, anchoColumna);
   }
   let tipoInterno: TareaTipoInterna = tarea.tipo;
-  if (tipoInterno === "tarea" && x2 - x1 < handleWidth * 2) {
+  if (tipoInterno === "tarea" && x2 - x1 < anchoCanal * 2) {
     tipoInterno = "smalltask";
-    x2 = x1 + handleWidth * 2;
+    x2 = x1 + anchoCanal * 2;
   }
 
   const [anchoProgreso, progresoX] = progressWithByParams(
@@ -192,7 +192,7 @@ const convertToBar = (
     progresoX,
     anchoProgreso,
     barCornerRadius,
-    handleWidth,
+    anchoCanal,
     ocultarHijos,
     Alto: altoTarea,
     barraHijos: [],
@@ -208,7 +208,7 @@ const convertirAHito = (
   altoFila: number,
   altoTarea: number,
   barCornerRadius: number,
-  handleWidth: number,
+  anchoCanal: number,
   hitoBackgroundColor: string,
   hitoBackgroundSelectedColor: string
 ): BarraTareas => {
@@ -236,7 +236,7 @@ const convertirAHito = (
     progresoX: 0,
     anchoProgreso: 0,
     barCornerRadius,
-    handleWidth,
+    anchoCanal,
     tipoInterno: tarea.tipo,
     progreso: 0,
     Alto: rotatedHeight,
@@ -336,8 +336,8 @@ export const getProgressPoint = (
 };
 
 const startByX = (x: number, xStep: number, tarea: BarraTareas) => {
-  if (x >= tarea.x2 - tarea.handleWidth * 2) {
-    x = tarea.x2 - tarea.handleWidth * 2;
+  if (x >= tarea.x2 - tarea.anchoCanal * 2) {
+    x = tarea.x2 - tarea.anchoCanal * 2;
   }
   const steps = Math.round((x - tarea.x1) / xStep);
   const additionalXValue = steps * xStep;
@@ -346,8 +346,8 @@ const startByX = (x: number, xStep: number, tarea: BarraTareas) => {
 };
 
 const endByX = (x: number, xStep: number, tarea: BarraTareas) => {
-  if (x <= tarea.x1 + tarea.handleWidth * 2) {
-    x = tarea.x1 + tarea.handleWidth * 2;
+  if (x <= tarea.x1 + tarea.anchoCanal * 2) {
+    x = tarea.x1 + tarea.anchoCanal * 2;
   }
   const steps = Math.round((x - tarea.x2) / xStep);
   const additionalXValue = steps * xStep;
@@ -368,9 +368,9 @@ const dateByX = (
   tareaX: number,
   fechaTarea: Date,
   xStep: number,
-  timeStep: number
+  intervaloTiempo: number
 ) => {
-  let newDate = new Date(((x - tareaX) / xStep) * timeStep + fechaTarea.getTime());
+  let newDate = new Date(((x - tareaX) / xStep) * intervaloTiempo + fechaTarea.getTime());
   newDate = new Date(
     newDate.getTime() +
       (newDate.getTimezoneOffset() - fechaTarea.getTimezoneOffset()) * 60000
@@ -386,7 +386,7 @@ export const handleTareaPorEventoRatonSVG = (
   action: BarMoveAction,
   tareaSeleccionada: BarraTareas,
   xStep: number,
-  timeStep: number,
+  intervaloTiempo: number,
   initEventX1Delta: number,
   rtl: boolean
 ): { isChanged: boolean; tareaCambiada: BarraTareas } => {
@@ -398,7 +398,7 @@ export const handleTareaPorEventoRatonSVG = (
         action,
         tareaSeleccionada,
         xStep,
-        timeStep,
+        intervaloTiempo,
         initEventX1Delta
       );
       break;
@@ -408,7 +408,7 @@ export const handleTareaPorEventoRatonSVG = (
         action,
         tareaSeleccionada,
         xStep,
-        timeStep,
+        intervaloTiempo,
         initEventX1Delta,
         rtl
       );
@@ -422,7 +422,7 @@ const handleTareaPorEventoRatonSVGPorBarra = (
   action: BarMoveAction,
   tareaSeleccionada: BarraTareas,
   xStep: number,
-  timeStep: number,
+  intervaloTiempo: number,
   initEventX1Delta: number,
   rtl: boolean
 ): { isChanged: boolean; tareaCambiada: BarraTareas } => {
@@ -458,7 +458,7 @@ const handleTareaPorEventoRatonSVGPorBarra = (
             tareaSeleccionada.x1,
             tareaSeleccionada.fin,
             xStep,
-            timeStep
+            intervaloTiempo
           );
         } else {
           tareaCambiada.inicio = dateByX(
@@ -466,7 +466,7 @@ const handleTareaPorEventoRatonSVGPorBarra = (
             tareaSeleccionada.x1,
             tareaSeleccionada.inicio,
             xStep,
-            timeStep
+            intervaloTiempo
           );
         }
         const [anchoProgreso, progresoX] = progressWithByParams(
@@ -491,7 +491,7 @@ const handleTareaPorEventoRatonSVGPorBarra = (
             tareaSeleccionada.x2,
             tareaSeleccionada.inicio,
             xStep,
-            timeStep
+            intervaloTiempo
           );
         } else {
           tareaCambiada.fin = dateByX(
@@ -499,7 +499,7 @@ const handleTareaPorEventoRatonSVGPorBarra = (
             tareaSeleccionada.x2,
             tareaSeleccionada.fin,
             xStep,
-            timeStep
+            intervaloTiempo
           );
         }
         const [anchoProgreso, progresoX] = progressWithByParams(
@@ -526,14 +526,14 @@ const handleTareaPorEventoRatonSVGPorBarra = (
           tareaSeleccionada.x1,
           tareaSeleccionada.inicio,
           xStep,
-          timeStep
+          intervaloTiempo
         );
         tareaCambiada.fin = dateByX(
           newMoveX2,
           tareaSeleccionada.x2,
           tareaSeleccionada.fin,
           xStep,
-          timeStep
+          intervaloTiempo
         );
         tareaCambiada.x1 = newMoveX1;
         tareaCambiada.x2 = newMoveX2;
@@ -557,7 +557,7 @@ const handleTareaPorEventoRatonSVGPorHito = (
   action: BarMoveAction,
   tareaSeleccionada: BarraTareas,
   xStep: number,
-  timeStep: number,
+  intervaloTiempo: number,
   initEventX1Delta: number
 ): { isChanged: boolean; tareaCambiada: BarraTareas } => {
   const tareaCambiada: BarraTareas = { ...tareaSeleccionada };
@@ -576,7 +576,7 @@ const handleTareaPorEventoRatonSVGPorHito = (
           tareaSeleccionada.x1,
           tareaSeleccionada.inicio,
           xStep,
-          timeStep
+          intervaloTiempo
         );
         tareaCambiada.fin = tareaCambiada.inicio;
         tareaCambiada.x1 = newMoveX1;
